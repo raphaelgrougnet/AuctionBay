@@ -41,3 +41,11 @@ def get_curseur(self):
         yield curseur
     finally:
         curseur.close()
+
+
+def get_encheres(conn):
+    """Obtient toutes les enchères"""
+    with conn.get_curseur() as curseur:
+        curseur.execute("SELECT id_enchere, titre, date_limite FROM enchere")
+        return curseur.fetchall()
+
