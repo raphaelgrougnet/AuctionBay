@@ -49,3 +49,27 @@ def get_encheres(conn):
         curseur.execute("SELECT id_enchere, titre, date_limite FROM enchere")
         return curseur.fetchall()
 
+
+def get_utilisateurs(conn):
+    """Obtient tous les utilisateurs"""
+    with conn.get_curseur() as curseur:
+        curseur.execute("SELECT id_utilisateur, courriel, nom, est_admin FROM utilisateur")
+        return curseur.fetchall()
+
+
+def get_compte(conn, courriel, mdp):
+    """Obtient le compte correspondant au courriel"""
+    with conn.get_curseur() as curseur:
+        curseur.execute("SELECT id_utilisateur, courriel, nom, est_admin "
+                        "FROM utilisateur WHERE courriel = %(courriel)s AND mdp = %(mdp)s",
+                        {"courriel": courriel, "mdp": mdp})
+        return curseur.fetchone()
+
+
+def ajouter_compte(conn, courriel, mdp, nom):
+    """Ajoute un compte"""
+    with conn.get_curseur() as curseur:
+        curseur.execute("INSERT INTO utilisateur (courriel, mdp, nom, est_admin) "
+                        "VALUES (%(courriel)s, %(mdp)s, %(nom)s, 0)",
+                        {"courriel": courriel, "mdp": mdp, "nom": nom})
+        return get_compte(conn, courriel, mdp)

@@ -1,0 +1,39 @@
+{% extends "base.jinja" %}
+{% block contenu %}
+    {% if not utilisateur %}
+        <form class="form-login my-5" action="/compte/inscription" method="post">
+
+            <div class="form-group">
+                <label for="nomInput" class="form-label mt-4">Nom</label>
+                <input type="text" class="form-control {{ classe_erreur_nom }}" id="nomInput"
+                       placeholder="Entrer votre nom" name="nom" value="{{ value_nom }}">
+                <div class="invalid-feedback">Le nom est obligatoire.</div>
+            </div>
+
+            <div class="form-group">
+                <label for="emailInput" class="form-label mt-4">Courriel</label>
+                <input type="email" class="form-control {{ classe_erreur_email }}" id="emailInput" aria-describedby="emailHelp"
+                       placeholder="Entrer votre courriel" name="courriel" value="{{ value_courriel }}"
+                <small id="emailHelp" class="form-text text-muted">Nous ne communiquerons jamais votre adresse
+                    électronique à qui que ce soit d'autre.</small>
+                <div class="invalid-feedback">{{ contenu_erreur_email }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="mdpInput" class="form-label mt-4">Mot de passe</label>
+                <input type="password" class="form-control {{ classe_erreur_mdp }}" id="mdpInput"
+                       placeholder="Entrer votre mot de passe" name="mdp">
+                <div class="invalid-feedback">{{ contenu_erreur_mdp }}</div>
+            </div>
+
+            <div class="form-group">
+                <label for="mdpInputConfirm" class="form-label mt-4">Re-tapez votre Mot de passe</label>
+                <input type="password" class="form-control {{ classe_erreur_mdp_confirm }}" id="mdpInputConfirm"
+                       placeholder="Ré-entrer votre mot de passe" name="mdp_confirm">
+                <div class="invalid-feedback">Les mot de passe ne correspond pas.</div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Inscription</button>
+
+        </form>
+    {% endif %}
+{% endblock %}

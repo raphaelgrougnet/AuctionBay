@@ -32,7 +32,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" href="/">Accueil</a>
                     </li>
-                    {% if user %}
+                    {% if utilisateur %}
                         <li class="nav-item">
                             <a class="nav-link" href="#">Mes enchères</a>
                         </li>
@@ -40,22 +40,22 @@
                             <a class="nav-link" href="#">Mes mises</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Déconnexion</a>
+                            <a class="nav-link" href="/compte/deconnexion">Déconnexion</a>
                         </li>
 
                     {% endif %}
 
                 </ul>
-                {% if not user %}
+                {% if not utilisateur %}
                     <div class="d-flex">
-                        <a href="/compte/signin" class="btn btn-secondary mx-1 my-2 my-sm-0">Se connecter</a>
-                        <a href="/compte/signup" class="btn btn-secondary mx-1 my-2 my-sm-0">S'inscrire</a>
+                        <a href="/compte/connexion" class="btn btn-secondary mx-1 my-2 my-sm-0">Se connecter</a>
+                        <a href="/compte/inscription" class="btn btn-secondary mx-1 my-2 my-sm-0">S'inscrire</a>
                     </div>
                 {% else %}
                     <div class="d-flex">
                         <a href="/compte" class="nav-link me-2"><i class="bi bi-person-circle fs-2 text-white"></i></a>
 
-                        <a href="/compte" class="nav-link"><span class="fs-2 text-white">Nom</span></a>
+                        <a href="/compte" class="nav-link"><span class="fs-2 text-white">{{ utilisateur.nom }}</span></a>
 
                     </div>
                 {% endif %}
@@ -66,7 +66,7 @@
     </nav>
 
 </header>
-<main>
+<main class="container">
 {% block contenu %}
 {% endblock %}
 </main>
