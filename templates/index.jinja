@@ -2,14 +2,12 @@
 
 {% block contenu %}
 <main>
-    <h2>Accueil</h2>
-
     <div class="container p-3">
         <div class="row gy-3 gx-3">
             {% for e in encheres %}
                 <div class="col-sm-12 col-md-6 col-lg-3">
                     <div class="card">
-                        <img src="https://picsum.photos/seed/{{ e.id_enchere }}/200/300" class="card-img-top" alt="Image de {{ e.titre }}">
+                        <img src="https://picsum.photos/seed/{{ e.id_enchere }}/900/1000" class="card-img-top" alt="Image de {{ e.titre }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ e.titre }}</h5>
                             <p class="card-text">{{ e.date_limite }}</p>

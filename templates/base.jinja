@@ -3,19 +3,79 @@
 
 <head>
     <title>AuctionBay</title>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" href="https://www.cegepgarneau.ca/favicon.ico" />
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" href="/static/images/logo_white.svg"/>
+    <link rel="stylesheet" href="/static/css/styles.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N"
+            crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <header>
-        <h1>AuctionBay</h1>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
 
-    </header>
-    {% block contenu %}
-    {% endblock %}
+            <a class="navbar-brand d-flex" href="/">
+                <img src="/static/images/logo_white.svg" width="36" height="30" class="d-inline-block align-text-top"
+                     alt="Logo">
+                AuctionBay
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01"
+                    aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarColor01">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Accueil</a>
+                    </li>
+                    {% if user %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mes enchères</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Mes mises</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Déconnexion</a>
+                        </li>
+
+                    {% endif %}
+
+                </ul>
+                {% if not user %}
+                    <div class="d-flex">
+                        <a href="/compte/signin" class="btn btn-secondary mx-1 my-2 my-sm-0">Se connecter</a>
+                        <a href="/compte/signup" class="btn btn-secondary mx-1 my-2 my-sm-0">S'inscrire</a>
+                    </div>
+                {% else %}
+                    <div class="d-flex">
+                        <a href="/compte" class="nav-link me-2"><i class="bi bi-person-circle fs-2 text-white"></i></a>
+
+                        <a href="/compte" class="nav-link"><span class="fs-2 text-white">Nom</span></a>
+
+                    </div>
+                {% endif %}
+
+
+            </div>
+        </div>
+    </nav>
+
+</header>
+<main>
+{% block contenu %}
+{% endblock %}
+</main>
+
+
+<footer class="bg-primary">
+    <p class="text-center text-light">Raphaël Grougnet | Julien Paquet-Beaudoin &copy; 2023</p>
+</footer>
+
 </body>
 
 </html>
