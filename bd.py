@@ -73,3 +73,13 @@ def ajouter_compte(conn, courriel, mdp, nom):
                         "VALUES (%(courriel)s, %(mdp)s, %(nom)s, 0)",
                         {"courriel": courriel, "mdp": mdp, "nom": nom})
         return get_compte(conn, courriel, mdp)
+
+
+def get_encheres_utilisateur(conn, id_utilisateur):
+    """Obtient les enchères d'un utilisateur"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT id_enchere, titre, date_limite FROM enchere "
+            "WHERE fk_vendeur = %(id_utilisateur)s order by date_limite",
+            {"id_utilisateur": id_utilisateur})
+        return curseur.fetchall()

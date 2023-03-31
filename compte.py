@@ -102,3 +102,16 @@ def inscription():
                 return redirect("/", 303)
 
         return render_template('compte/inscription.jinja', utilisateur=session.get("utilisateur"))
+
+
+@bp_compte.route('/mes_encheres')
+def mes_encheres():
+    """Permet d'afficher les enchères de l'utilisateur"""
+    if not session.get("utilisateur"):
+        return redirect("/compte/connexion", 303)
+
+    with bd.creer_connexion() as conn:
+        encheres = bd.get_encheres_utilisateur(conn, session.get("utilisateur")["id_utilisateur"])
+
+        return render_template('compte/mes_encheres.jinja', encheres=encheres,
+                               utilisateur=session.get("utilisateur"))

@@ -1,0 +1,28 @@
+{% extends "base.jinja" %}
+{% block contenu %}
+    <h1 class="my-5 mx-3"> Mes Enchères</h1>
+    {% if not encheres %}
+        <div class="alert alert-info" role="alert">
+            Vous n'avez aucune enchère en cours.
+        </div>
+    {% else %}
+        <div class="container p-3">
+            <div class="row gy-3 gx-3">
+                {% for enchere in encheres %}
+                    <div class="col-sm-12 col-md-6 col-lg-3">
+                        <div class="card">
+                            <img src="https://picsum.photos/seed/{{ enchere.id_enchere }}/900/1000" class="card-img-top"
+                                 alt="Image de {{ enchere.titre }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ enchere.titre }}</h5>
+                                <p class="card-text">{{ enchere.date_limite }}</p>
+                                <a href="/encheres/{{ enchere.id_enchere }}" class="btn btn-primary">Détails</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
