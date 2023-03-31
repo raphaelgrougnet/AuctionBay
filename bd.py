@@ -46,7 +46,7 @@ def get_curseur(self):
 def get_encheres(conn):
     """Obtient toutes les enchères"""
     with conn.get_curseur() as curseur:
-        curseur.execute("SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere")
+        curseur.execute("SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere order by date_limite desc")
         return curseur.fetchall()
 
 
