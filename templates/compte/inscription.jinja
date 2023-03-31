@@ -1,22 +1,22 @@
 {% extends "base.jinja" %}
 {% block contenu %}
     {% if not utilisateur %}
-        <form class="form-login my-5" action="/compte/inscription" method="post">
+        <form class="form-login my-5" action="/compte/inscription" method="post" novalidate>
             <h1 class="h3 mb-3 font-weight-normal">Inscription</h1>
             <div class="form-group">
                 <label for="nomInput" class="form-label mt-4">Nom</label>
                 <input type="text" class="form-control {{ classe_erreur_nom }}" id="nomInput"
                        placeholder="Entrer votre nom" name="nom" value="{{ value_nom }}">
-                <div class="invalid-feedback">Le nom est obligatoire.</div>
+                <div class="invalid-feedback">{{ contenu_erreur_nom }}</div>
             </div>
 
             <div class="form-group">
                 <label for="emailInput" class="form-label mt-4">Courriel</label>
                 <input type="email" class="form-control {{ classe_erreur_email }}" id="emailInput" aria-describedby="emailHelp"
-                       placeholder="Entrer votre courriel" name="courriel" value="{{ value_courriel }}"
+                       placeholder="Entrer votre courriel" name="courriel" value="{{ value_courriel }}">
+                <div class="invalid-feedback">{{ contenu_erreur_email }}</div>
                 <small id="emailHelp" class="form-text text-muted">Nous ne communiquerons jamais votre adresse
                     électronique à qui que ce soit d'autre.</small>
-                <div class="invalid-feedback">{{ contenu_erreur_email }}</div>
             </div>
 
             <div class="form-group">

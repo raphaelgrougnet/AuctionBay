@@ -10,13 +10,33 @@
             <div class="row gy-3 gx-3">
                 {% for enchere in encheres %}
                     <div class="col-sm-12 col-md-6 col-lg-3">
+                    {% if enchere.est_supprimee %}
+                        <div class="card border-danger">
+                    {% elif enchere.est_invalide %}
+                        <div class="card border-warning">
+                    {% else %}
                         <div class="card">
+                    {% endif %}
+
                             <img src="https://picsum.photos/seed/{{ enchere.id_enchere }}/900/1000" class="card-img-top"
                                  alt="Image de {{ enchere.titre }}">
                             <div class="card-body">
                                 <h5 class="card-title">{{ enchere.titre }}</h5>
                                 <p class="card-text">{{ enchere.date_limite }}</p>
-                                <a href="/encheres/{{ enchere.id_enchere }}" class="btn btn-primary">Détails</a>
+                                {% if enchere.miseur %}
+                                    <div class="d-flex">
+                                        <p class="card-text">{{ enchere.miseur }}</p>
+                                        <p class="card-text ms-auto">{{ enchere.derniere_mise }} $</p>
+                                    </div>
+                                {% else %}
+                                    <p class="card-text">Aucune mise pour le moment.</p>
+                                {% endif %}
+                                {% if not enchere.est_supprimee %}
+                                    <a href="/encheres/{{ enchere.id_enchere }}" class="btn btn-primary">Détails</a>
+                                {% else %}
+                                    <p class="text-muted">Enchère supprimée par un administrateur.</p>
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>

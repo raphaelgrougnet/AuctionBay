@@ -46,7 +46,7 @@ def get_curseur(self):
 def get_encheres(conn):
     """Obtient toutes les enchères"""
     with conn.get_curseur() as curseur:
-        curseur.execute("SELECT id_enchere, titre, date_limite FROM enchere")
+        curseur.execute("SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere")
         return curseur.fetchall()
 
 
@@ -65,6 +65,12 @@ def get_compte(conn, courriel, mdp):
                         {"courriel": courriel, "mdp": mdp})
         return curseur.fetchone()
 
+def get_nom_compte(conn, id_utilisateur):
+    """Obtient le compte correspondant au courriel"""
+    with conn.get_curseur() as curseur:
+        curseur.execute("SELECT nom FROM utilisateur WHERE id_utilisateur = %(id_utilisateur)s",
+                        {"id_utilisateur": id_utilisateur})
+        return curseur.fetchone()
 
 def ajouter_compte(conn, courriel, mdp, nom):
     """Ajoute un compte"""
@@ -79,7 +85,17 @@ def get_encheres_utilisateur(conn, id_utilisateur):
     """Obtient les enchères d'un utilisateur"""
     with conn.get_curseur() as curseur:
         curseur.execute(
-            "SELECT id_enchere, titre, date_limite FROM enchere "
-            "WHERE fk_vendeur = %(id_utilisateur)s order by date_limite",
+            "SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere "
+            "WHERE fk_vendeur = %(id_utilisateur)s order by date_limite desc",
             {"id_utilisateur": id_utilisateur})
         return curseur.fetchall()
+
+
+def get_mise(conn, fk_enchere):
+    """Obtient les mises d'une enchère"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT fk_miseur, montant FROM mise "
+            "WHERE fk_enchere = %(id_enchere)s order by montant desc limit 1",
+            {"id_enchere": fk_enchere})
+        return curseur.fetchone()

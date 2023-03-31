@@ -1,10 +1,14 @@
+import datetime
+import re
+
 from flask import Flask, redirect, render_template, request, abort, session, Blueprint
 import hashlib
-
+import re
 import bd
 
 bp_compte = Blueprint('compte', __name__)
 
+regex_escape = re.compile("<(.*)>.*?|<(.*) />")
 
 def hacher_mdp(mdp_en_clair):
     """Prend un mot de passe en clair et lui applique une fonction de hachage"""
@@ -53,32 +57,56 @@ def inscription():
 
             mdpHashed = hacher_mdp(mdp)
 
-            utilisateur_trouve = bd.get_compte(conn, courriel, mdpHashed)
+            utilisateur_trouve = None
 
             classe_erreur_email = ""
             contenu_erreur_email = ""
             classe_erreur_nom = ""
+            contenu_erreur_nom = ""
             classe_erreur_mdp = ""
             contenu_erreur_mdp = ""
             classe_erreur_mdp_confirm = ""
 
             if nom == "":
                 classe_erreur_nom = "is-invalid"
+                contenu_erreur_nom = "Le nom est obligatoire."
+            elif len(nom) > 50 or len(nom) < 3:
+                classe_erreur_nom = "is-invalid"
+                contenu_erreur_nom = "Le nom doit être entre 3 et 50 caractères."
+            elif regex_escape.search(nom):
+                classe_erreur_nom = "is-invalid"
+                contenu_erreur_nom = "Le nom ne doit pas contenir de caractères spéciaux."
             else:
                 classe_erreur_nom = "is-valid"
 
             if courriel == "":
                 classe_erreur_email = "is-invalid"
                 contenu_erreur_email = "Le courriel est obligatoire."
-            elif utilisateur_trouve:
+            elif len(courriel) > 50:
+                classe_erreur_email = "is-invalid"
+                contenu_erreur_email = "Le courriel doit être inférieur à 50 caractères."
+            elif regex_escape.search(courriel):
+                classe_erreur_email = "is-invalid"
+                contenu_erreur_email = "Le courriel ne doit pas contenir de caractères spéciaux."
+            elif not re.match(r"[^@]+@[^@]+\.[^@]+", courriel):
+                classe_erreur_email = "is-invalid"
+                contenu_erreur_email = "Le courriel n'est pas valide."
+            elif bd.get_compte(conn, courriel, mdpHashed):
                 classe_erreur_email = "is-invalid"
                 contenu_erreur_email = "Le courriel est déjà associé à un autre utilisateur."
             else:
                 classe_erreur_email = "is-valid"
+                utilisateur_trouve = bd.get_compte(conn, courriel, mdpHashed)
 
             if mdp == "":
                 classe_erreur_mdp = "is-invalid"
                 contenu_erreur_mdp = "Le mot de passe est obligatoire."
+            elif len(mdp) < 4:
+                classe_erreur_mdp = "is-invalid"
+                contenu_erreur_mdp = "Le mot de passe doit être supérieur à 4 caractères."
+            elif regex_escape.search(mdp):
+                classe_erreur_mdp = "is-invalid"
+                contenu_erreur_mdp = "Le mot de passe ne doit pas contenir de caractères spéciaux."
 
             if mdp != mdp_confirm:
                 classe_erreur_mdp_confirm = "is-invalid"
@@ -90,9 +118,10 @@ def inscription():
                                        classe_erreur_email=classe_erreur_email,
                                        contenu_erreur_email=contenu_erreur_email,
                                        classe_erreur_nom=classe_erreur_nom,
+                                       contenu_erreur_nom=contenu_erreur_nom,
                                        classe_erreur_mdp=classe_erreur_mdp,
-                                       classe_erreur_mdp_confirm=classe_erreur_mdp_confirm,
                                        contenu_erreur_mdp=contenu_erreur_mdp,
+                                       classe_erreur_mdp_confirm=classe_erreur_mdp_confirm,
                                        value_nom=nom,
                                        value_courriel=courriel,
                                        utilisateur=session.get("utilisateur"))
@@ -112,6 +141,13 @@ def mes_encheres():
 
     with bd.creer_connexion() as conn:
         encheres = bd.get_encheres_utilisateur(conn, session.get("utilisateur")["id_utilisateur"])
+        date_now = datetime.date.today()
+        for enchere in encheres:
+            enchere["est_invalide"] = enchere["date_limite"] < date_now
+            mise = bd.get_mise(conn, enchere["id_enchere"])
+            if mise:
+                enchere["miseur"] = bd.get_nom_compte(conn, mise["fk_miseur"])["nom"]
+                enchere["derniere_mise"] = mise["montant"]
 
         return render_template('compte/mes_encheres.jinja', encheres=encheres,
                                utilisateur=session.get("utilisateur"))
