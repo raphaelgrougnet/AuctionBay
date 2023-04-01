@@ -144,10 +144,30 @@ def mes_encheres():
         date_now = datetime.date.today()
         for enchere in encheres:
             enchere["est_invalide"] = enchere["date_limite"] < date_now
-            mise = bd.get_mise(conn, enchere["id_enchere"])
+            mise = bd.get_mise_enchere(conn, enchere["id_enchere"])
             if mise:
                 enchere["miseur"] = bd.get_nom_compte(conn, mise["fk_miseur"])["nom"]
                 enchere["derniere_mise"] = mise["montant"]
 
         return render_template('compte/mes_encheres.jinja', encheres=encheres,
+                               utilisateur=session.get("utilisateur"))
+
+
+@bp_compte.route('/mes_mises')
+def mes_mises():
+    """Permet d'afficher les mises de l'utilisateur"""
+    if not session.get("utilisateur"):
+        return redirect("/compte/connexion", 303)
+
+    with bd.creer_connexion() as conn:
+        encheres = bd.get_mises_utilisateur(conn, session.get("utilisateur")["id_utilisateur"])
+        date_now = datetime.date.today()
+        for enchere in encheres:
+            enchere["est_invalide"] = enchere["date_limite"] < date_now
+            enchere["miseur"] = bd.get_nom_compte(conn, session["utilisateur"]["id_utilisateur"])["nom"]
+            enchere["derniere_mise"] = bd.get_mise_enchere(conn, enchere["id_enchere"])
+            enchere["dernier_miseur"] = bd.get_nom_compte(conn, enchere["derniere_mise"]["fk_miseur"])["nom"]
+
+
+        return render_template('compte/mes_mises.jinja', encheres=encheres,
                                utilisateur=session.get("utilisateur"))

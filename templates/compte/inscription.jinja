@@ -2,7 +2,7 @@
 {% block contenu %}
     {% if not utilisateur %}
         <form class="form-login my-5" action="/compte/inscription" method="post" novalidate>
-            <h1 class="h3 mb-3 font-weight-normal">Inscription</h1>
+            <h1 class="h3 mb-3 fw-normal">Inscription</h1>
             <div class="form-group">
                 <label for="nomInput" class="form-label mt-4">Nom</label>
                 <input type="text" class="form-control {{ classe_erreur_nom }}" id="nomInput"

@@ -1,9 +1,9 @@
 {% extends "base.jinja" %}
+
 {% block contenu %}
-    <h1 class="m-3 fw-normal"> Mes Enchères</h1>
     {% if not encheres %}
         <div class="alert alert-info mx-3" role="alert">
-            Vous n'avez aucune enchère en cours.
+            Vous n'avez aucune mises en cours.
         </div>
     {% else %}
         <div class="container p-3">
@@ -12,10 +12,10 @@
                     <div class="col-sm-12 col-md-6 col-lg-3">
                     {% if enchere.est_supprimee %}
                         <div class="card border-danger">
-                    {% elif enchere.est_invalide %}
+                    {% elif enchere.est_invalide or enchere.derniere_mise.montant > enchere.montant %}
                         <div class="card border-warning">
                     {% else %}
-                        <div class="card">
+                        <div class="card border-success">
                     {% endif %}
 
                             <img src="https://picsum.photos/seed/{{ enchere.id_enchere }}/900/1000" class="card-img-top"
@@ -24,9 +24,19 @@
                                 <h5 class="card-title">{{ enchere.titre }}</h5>
                                 <p class="card-text">{{ enchere.date_limite }}</p>
                                 {% if enchere.miseur %}
+                                    <span>Votre mise :</span>
                                     <div class="d-flex">
                                         <p class="card-text">{{ enchere.miseur }}</p>
-                                        <p class="card-text ms-auto">{{ enchere.derniere_mise }} $</p>
+                                        <p class="card-text ms-auto">{{ enchere.montant }} $</p>
+
+
+                                    </div>
+                                    <span>Dernière mise :</span>
+                                    <div class="d-flex">
+                                        <p class="card-text">{{ enchere.dernier_miseur }}</p>
+                                        <p class="card-text ms-auto">{{ enchere.derniere_mise.montant }} $</p>
+
+
                                     </div>
                                 {% else %}
                                     <p class="card-text">Aucune mise pour le moment.</p>
@@ -43,6 +53,6 @@
                 {% endfor %}
             </div>
         </div>
-    {% endif %}
 
+    {% endif %}
 {% endblock %}

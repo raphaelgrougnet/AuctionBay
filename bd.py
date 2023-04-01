@@ -65,12 +65,14 @@ def get_compte(conn, courriel, mdp):
                         {"courriel": courriel, "mdp": mdp})
         return curseur.fetchone()
 
+
 def get_nom_compte(conn, id_utilisateur):
     """Obtient le compte correspondant au courriel"""
     with conn.get_curseur() as curseur:
         curseur.execute("SELECT nom FROM utilisateur WHERE id_utilisateur = %(id_utilisateur)s",
                         {"id_utilisateur": id_utilisateur})
         return curseur.fetchone()
+
 
 def ajouter_compte(conn, courriel, mdp, nom):
     """Ajoute un compte"""
@@ -91,11 +93,34 @@ def get_encheres_utilisateur(conn, id_utilisateur):
         return curseur.fetchall()
 
 
-def get_mise(conn, fk_enchere):
+def get_enchere(conn, id_enchere):
+    """Obtient une enchère"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere "
+            "WHERE id_enchere = %(id_enchere)s",
+            {"id_enchere": id_enchere})
+        return curseur.fetchone()
+
+
+def get_mise_enchere(conn, fk_enchere):
     """Obtient les mises d'une enchère"""
     with conn.get_curseur() as curseur:
         curseur.execute(
-            "SELECT fk_miseur, montant FROM mise "
+            "SELECT fk_miseur, montant, fk_enchere FROM mise "
             "WHERE fk_enchere = %(id_enchere)s order by montant desc limit 1",
             {"id_enchere": fk_enchere})
         return curseur.fetchone()
+
+
+def get_mises_utilisateur(conn, id_utilisateur):
+    """Obtient les mises d'un utilisateur"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT e.id_enchere, e.titre, e.description, e.date_limite, e.est_supprimee, e.fk_vendeur, m.montant "
+            "FROM `enchere` e "
+            "JOIN mise m ON e.id_enchere = m.fk_enchere "
+            "JOIN utilisateur u on u.id_utilisateur = m.fk_miseur "
+            "WHERE u.id_utilisateur = %(id_utilisateur)s order by date_limite desc",
+            {"id_utilisateur": id_utilisateur})
+        return curseur.fetchall()

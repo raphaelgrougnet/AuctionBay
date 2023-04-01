@@ -37,7 +37,7 @@
                             <a class="nav-link" href="/compte/mes_encheres">Mes enchères</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Mes mises</a>
+                            <a class="nav-link" href="/compte/mes_mises">Mes mises</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/compte/deconnexion">Déconnexion</a>
@@ -52,12 +52,22 @@
                         <a href="/compte/inscription" class="btn btn-secondary mx-1 my-2 my-sm-0">S'inscrire</a>
                     </div>
                 {% else %}
-                    <div class="d-flex">
+                    {% if utilisateur.est_admin %}
+                        <div class="d-flex">
+                        <i class="bi bi-person-circle fs-2 text-info me-2"></i>
+
+                        <span class="fs-2 text-info">{{ utilisateur.nom }}<span class="fs-5 text-muted ms-2">(Admin)</span></span>
+
+                    </div>
+                    {% else %}
+                        <div class="d-flex">
                         <i class="bi bi-person-circle fs-2 text-white me-2"></i>
 
                         <span class="fs-2 text-white">{{ utilisateur.nom }}</span>
 
                     </div>
+                    {% endif %}
+
                 {% endif %}
 
 
