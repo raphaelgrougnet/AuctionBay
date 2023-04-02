@@ -30,14 +30,14 @@
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/">Accueil</a>
+                        <a class="nav-link {{ classe_accueil }}" href="/">Accueil</a>
                     </li>
                     {% if utilisateur %}
                         <li class="nav-item">
-                            <a class="nav-link" href="/compte/mes_encheres">Mes enchères</a>
+                            <a class="nav-link {{ classe_encheres }}" href="/compte/mes_encheres">Mes enchères</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/compte/mes_mises">Mes mises</a>
+                            <a class="nav-link {{ classe_mises }}" href="/compte/mes_mises">Mes mises</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="/compte/deconnexion">Déconnexion</a>
@@ -48,7 +48,7 @@
                 </ul>
                 {% if not utilisateur %}
                     <div class="d-flex">
-                        <a href="/compte/connexion" class="btn btn-secondary mx-1 my-2 my-sm-0">Se connecter</a>
+                        <a href="/compte/connexion" class="btn btn-secondary me-1 my-2 my-sm-0">Se connecter</a>
                         <a href="/compte/inscription" class="btn btn-secondary mx-1 my-2 my-sm-0">S'inscrire</a>
                     </div>
                 {% else %}
@@ -82,8 +82,8 @@
 </main>
 
 
-<footer class="bg-primary">
-    <p class="text-center text-light m-0">Raphaël Grougnet | Julien Paquet-Beaudoin &copy; 2023</p>
+<footer class="bg-primary fixed-bottom">
+    <p class="text-center text-light m-0">Raphaël Grougnet | Julien Paquet-Beaudoin &copy;2023</p>
 </footer>
 
 </body>

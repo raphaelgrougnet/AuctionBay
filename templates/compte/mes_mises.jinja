@@ -1,6 +1,7 @@
 {% extends "base.jinja" %}
 
 {% block contenu %}
+    <h1 class="fw-normal m-3">Mes mises</h1>
     {% if not encheres %}
         <div class="alert alert-info mx-3" role="alert">
             Vous n'avez aucune mises en cours.
@@ -33,7 +34,7 @@
                                     </div>
                                     <span>Dernière mise :</span>
                                     <div class="d-flex">
-                                        <p class="card-text">{{ enchere.dernier_miseur }}</p>
+                                        <p class="card-text">{{ enchere.derniere_mise.dernier_miseur }}</p>
                                         <p class="card-text ms-auto">{{ enchere.derniere_mise.montant }} $</p>
 
 

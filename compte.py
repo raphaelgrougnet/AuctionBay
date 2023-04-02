@@ -150,7 +150,7 @@ def mes_encheres():
                 enchere["derniere_mise"] = mise["montant"]
 
         return render_template('compte/mes_encheres.jinja', encheres=encheres,
-                               utilisateur=session.get("utilisateur"))
+                               utilisateur=session.get("utilisateur"), classe_encheres="active")
 
 
 @bp_compte.route('/mes_mises')
@@ -166,8 +166,8 @@ def mes_mises():
             enchere["est_invalide"] = enchere["date_limite"] < date_now
             enchere["miseur"] = bd.get_nom_compte(conn, session["utilisateur"]["id_utilisateur"])["nom"]
             enchere["derniere_mise"] = bd.get_mise_enchere(conn, enchere["id_enchere"])
-            enchere["dernier_miseur"] = bd.get_nom_compte(conn, enchere["derniere_mise"]["fk_miseur"])["nom"]
+            enchere["derniere_mise"]["dernier_miseur"] = bd.get_nom_compte(conn, enchere["derniere_mise"]["fk_miseur"])["nom"]
 
 
         return render_template('compte/mes_mises.jinja', encheres=encheres,
-                               utilisateur=session.get("utilisateur"))
+                               utilisateur=session.get("utilisateur"), classe_mises="active")

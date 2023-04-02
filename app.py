@@ -26,6 +26,8 @@ def index():
     with bd.creer_connexion() as conn:
         encheres = bd.get_encheres(conn)
 
-    return render_template('index.jinja', encheres=encheres, utilisateur=session.get("utilisateur"))
+    return render_template('index.jinja', encheres=encheres,
+                           utilisateur=session.get("utilisateur"),
+                           classe_accueil="active")
 
 
