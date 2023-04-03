@@ -1,0 +1,9 @@
+{% extends "base.jinja" %}
+{% block contenu %}
+    <div class="mainbox">
+        <div class="err">{{ premier_char_erreur }}</div>
+        <i class="far fa-question-circle fa-spin"></i>
+        <div class="err2">{{ dernier_char_erreur }}</div>
+        <div class="msg">{{ message }}<p>Allez sur la page d'<a href="/">accueil</a> et réessayez depuis cet endroit.</p></div>
+    </div>
+{% endblock %}
