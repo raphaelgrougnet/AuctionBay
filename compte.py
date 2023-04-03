@@ -1,7 +1,7 @@
 import datetime
 import re
 
-from flask import Flask, redirect, render_template, request, abort, session, Blueprint
+from flask import redirect, render_template, request, session, Blueprint
 import hashlib
 import re
 import bd
@@ -9,6 +9,8 @@ import bd
 bp_compte = Blueprint('compte', __name__)
 
 regex_escape = re.compile("<(.*)>.*?|<(.*) />")
+regex_courriel = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+
 
 def hacher_mdp(mdp_en_clair):
     """Prend un mot de passe en clair et lui applique une fonction de hachage"""
@@ -88,7 +90,7 @@ def inscription():
             elif regex_escape.search(courriel):
                 classe_erreur_email = "is-invalid"
                 contenu_erreur_email = "Le courriel ne doit pas contenir de caractères spéciaux."
-            elif not re.match(r"[^@]+@[^@]+\.[^@]+", courriel):
+            elif not re.match(regex_courriel, courriel):
                 classe_erreur_email = "is-invalid"
                 contenu_erreur_email = "Le courriel n'est pas valide."
             elif bd.get_compte(conn, courriel, mdpHashed):
@@ -166,8 +168,8 @@ def mes_mises():
             enchere["est_invalide"] = enchere["date_limite"] < date_now
             enchere["miseur"] = bd.get_nom_compte(conn, session["utilisateur"]["id_utilisateur"])["nom"]
             enchere["derniere_mise"] = bd.get_mise_enchere(conn, enchere["id_enchere"])
-            enchere["derniere_mise"]["dernier_miseur"] = bd.get_nom_compte(conn, enchere["derniere_mise"]["fk_miseur"])["nom"]
-
+            enchere["derniere_mise"]["dernier_miseur"] = bd.get_nom_compte(conn, enchere["derniere_mise"]["fk_miseur"])[
+                "nom"]
 
         return render_template('compte/mes_mises.jinja', encheres=encheres,
                                utilisateur=session.get("utilisateur"), classe_mises="active")
