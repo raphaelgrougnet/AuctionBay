@@ -97,7 +97,7 @@ def get_enchere(conn, id_enchere):
     """Obtient une enchère"""
     with conn.get_curseur() as curseur:
         curseur.execute(
-            "SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere "
+            "SELECT id_enchere, titre, description, date_limite, est_supprimee, fk_vendeur FROM enchere "
             "WHERE id_enchere = %(id_enchere)s",
             {"id_enchere": id_enchere})
         return curseur.fetchone()
@@ -124,3 +124,17 @@ def get_mises_utilisateur(conn, id_utilisateur):
             "WHERE u.id_utilisateur = %(id_utilisateur)s order by date_limite desc",
             {"id_utilisateur": id_utilisateur})
         return curseur.fetchall()
+
+
+def faire_mise(conn, id_enchere, id_miseur, montant):
+    """Permet de faire une nouvelle mise pour une enchère"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "INSERT INTO mise (fk_miseur, fk_enchere, montant) VALUES(%(id_miseur)s, %(id_enchere)s, %(montant)s)",
+            {
+                "id_miseur": id_miseur,
+                "id_enchere": id_enchere,
+                "montant": montant
+            }
+        )
+

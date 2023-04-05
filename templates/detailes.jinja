@@ -1,0 +1,63 @@
+{% extends "base.jinja" %}
+
+{% block contenu %}
+    <section class="p-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-8">
+                    <img src="https://picsum.photos/seed/{{ enchere.id_enchere }}/800/400" alt="Photo de {{ enchere.titre }}">
+                </div>
+                <div class="col-sm-12 col-md-12 col-lg-4">
+                    <div>
+                        <h3>{{ enchere.titre }}</h3>
+                        <p>{{ enchere.description }}</p>
+                        <div>
+                            {% if active %}
+                                <p class="text-success">{{ enchere.date_limite }}</p>
+                                <p class="text-success">Actif</p>
+                            {% else %}
+                                <p class="text-danger">{{ enchere.date_limite }}</p>
+                                <p class="text-danger">Inactif</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        {% if mise %}
+                            {% if est_vendeur %}
+                                <div class="card text-bg-light mb-3">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ mise.nom }}</h5>
+                                        <p class="card-text">Plus grande mise : {{ mise.montant }}$</p>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="card text-bg-light mb-3">
+                                    <div class="card-body">
+                                        <p class="card-text">Plus grande mise : {{ mise.montant }}$</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <div class="card text-bg-light mb-3">
+                                <div class="card-body">
+                                    <p class="card-text">Il n'y a aucune mise présentement !</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                <div>
+                    <form method="post" action="/encheres/{{ enchere.id_enchere }}" novalidate>
+                        <input type="hidden" name="id" value="{{enchere.id_enchere}}"/>
+                        <div>
+                            <label for="motant_miser" class="form-label">Miser :</label>
+                            <input type="number" name="motant_miser" id="motant_miser" class="form-control {{ validation }}">
+                            <div class="invalid-feedback">{{ message }}</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Misez</button>
+                    </form>
+                </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -9,8 +9,11 @@ app = Flask(__name__)
 
 import bd
 from compte import bp_compte
+from encheres import bp_encheres
 
 app.register_blueprint(bp_compte, url_prefix='/compte')
+app.register_blueprint(bp_encheres, url_prefix='/encheres')
+
 
 # Enregistre toutes les routes disponibles dans dp_jeu avec le préfixe /jeu
 
