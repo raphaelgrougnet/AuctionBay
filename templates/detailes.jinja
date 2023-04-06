@@ -26,7 +26,7 @@
                             {% if est_vendeur %}
                                 <div class="card text-bg-light mb-3">
                                     <div class="card-body">
-                                        <h5 class="card-title">{{ mise.nom }}</h5>
+                                        <h5 class="card-title">{{ nom }}</h5>
                                         <p class="card-text">Plus grande mise : {{ mise.montant }}$</p>
                                     </div>
                                 </div>
@@ -45,17 +45,30 @@
                             </div>
                         {% endif %}
                     </div>
-                <div>
-                    <form method="post" action="/encheres/{{ enchere.id_enchere }}" novalidate>
-                        <input type="hidden" name="id" value="{{enchere.id_enchere}}"/>
-                        <div>
-                            <label for="motant_miser" class="form-label">Miser :</label>
-                            <input type="number" name="motant_miser" id="motant_miser" class="form-control {{ validation }}">
-                            <div class="invalid-feedback">{{ message }}</div>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Misez</button>
-                    </form>
-                </div>
+
+                    <div>
+                        {% if user %}
+                            {% if active %}
+                                {% if not est_vendeur %}
+                                    <form method="post" action="/encheres/{{ enchere.id_enchere }}" novalidate>
+                                        <input type="hidden" name="id" value="{{enchere.id_enchere}}"/>
+                                        <div>
+                                            <label for="motant_miser" class="form-label">Miser :</label>
+                                            <input type="number" name="motant_miser" id="motant_miser" class="form-control {{ validation }}">
+                                            <div class="invalid-feedback">{{ message }}</div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-2">Misez</button>
+                                    </form>
+                                {% else %}
+                                    <p class="text-warning">Vous êtes le vendeur de cette enchère !</p>
+                                {% endif %}
+                            {% else %}
+                                <p class="text-warning">Cette enchère n'est pas active !</p>
+                            {% endif %}
+                        {% else %}
+                            <p class="text-warning">Vous devez vous connecter pour miser !</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
