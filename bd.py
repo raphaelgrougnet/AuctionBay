@@ -138,3 +138,25 @@ def faire_mise(conn, id_enchere, id_miseur, montant):
             }
         )
 
+
+def supprimer_enchere(conn, id_enchere):
+    """Permet de faire la suppression d'une enchère"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "UPDATE enchere SET est_supprimee = 1 WHERE id_enchere = %(id_enchere)s",
+            {
+                "id_enchere": id_enchere
+            }
+        )
+
+
+def retablir_enchere(conn, id_enchere):
+    """Permet de rétablir une enchère supprimée"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "UPDATE enchere SET est_supprimee = 0 WHERE id_enchere = %(id_enchere)s",
+            {
+                "id_enchere": id_enchere
+            }
+        )
+

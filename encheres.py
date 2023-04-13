@@ -55,21 +55,28 @@ def detail_enchere(identifiant):
 
         if enchere['est_supprimee'] == 0:
             valeur_btn = "Supprimer l'enchère"
-            route_btn = "Suppression"
+            route_btn = "suppression"
         else:
             valeur_btn = "Rétablir l'enchère supprimée"
-            route_btn = "Retablir"
+            route_btn = "retablir"
 
     if request.method == 'POST':
         msg = ""
         id_enchere = request.form.get("id", default="")
-        montant = request.form.get("motant_miser", default=0)
+        montant = request.form.get("motant_miser", default="")
         validation = ""
+
+        if not montant:
+            montant = 0
 
         if id_enchere == "" or enchere['est_supprimee'] == 1:
             abort(404)
         elif not user:
             abort(401)
+        elif int(montant) == 0:
+            msg = "Vous devez mettre un montant"
+        elif int(montant) > 2147483647:
+            msg = "Le montant ne peut pas dépasser 2147483647\n"
         elif est_vendeur:
             abort(400)
         elif not active:
@@ -97,10 +104,38 @@ def detail_enchere(identifiant):
                            valeur_btn=valeur_btn, utilisateur=user)
 
 
-@bp_encheres.route('/Suppression', methods=['POST'])
+@bp_encheres.route('/suppression', methods=['POST'])
 def suppression():
     """Suppression de l'enchère"""
     id = request.form.get("id", default="")
+    user = session.get("utilisateur")
 
+    if not user:
+        abort(401)
+    if user['est_admin'] == 0:
+        abort(403)
     if not id:
         abort(404)
+
+    with bd.creer_connexion() as conn:
+        bd.supprimer_enchere(conn, id)
+
+    return render_template('suppression.jinja', id=id, utilisateur=user)
+
+@bp_encheres.route('/retablir', methods=['POST'])
+def retablir():
+    """Rétablir l'enchère supprimée"""
+    id = request.form.get("id", default="")
+    user = session.get("utilisateur")
+
+    if not user:
+        abort(401)
+    if user['est_admin'] == 0:
+        abort(403)
+    if not id:
+        abort(404)
+
+    with bd.creer_connexion() as conn:
+        bd.retablir_enchere(conn, id)
+
+    return render_template('retablir.jinja', id=id, utilisateur=user)
