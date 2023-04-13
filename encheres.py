@@ -88,12 +88,13 @@ def detail_enchere(identifiant):
 
             return redirect(f'/encheres/{id_enchere}', 303)
         else:
-            return render_template('detailes.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
+            return render_template('details.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
                                    est_vendeur=est_vendeur, validation="is-invalid", message=msg,
-                                   user=user, valeur_btn=valeur_btn, route_btn=route_btn)
+                                   user=user, valeur_btn=valeur_btn, route_btn=route_btn, utilisateur=user)
 
-    return render_template('detailes.jinja', enchere=enchere, active=active, nom=nom,
-                           mise=mise, est_vendeur=est_vendeur, user=user, route_btn=route_btn, valeur_btn=valeur_btn)
+    return render_template('details.jinja', enchere=enchere, active=active, nom=nom,
+                           mise=mise, est_vendeur=est_vendeur, user=user, route_btn=route_btn,
+                           valeur_btn=valeur_btn, utilisateur=user)
 
 
 @bp_encheres.route('/Suppression', methods=['POST'])
