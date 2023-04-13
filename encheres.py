@@ -97,7 +97,7 @@ def detail_enchere(identifiant):
                            valeur_btn=valeur_btn, utilisateur=user)
 
 
-@bp_encheres.route('/Suppression', methods=['POST'])
+@bp_encheres.route('/suppression', methods=['POST'])
 def suppression():
     """Suppression de l'enchère"""
     id = request.form.get("id", default="")
