@@ -15,6 +15,8 @@ def detail_enchere(identifiant):
     est_miseur = False
     nom = ""
     montant_enchere = 0
+    valeur_btn = ""
+    route_btn = ""
 
     with bd.creer_connexion() as conn:
         enchere = bd.get_enchere(conn, identifiant)
@@ -51,6 +53,13 @@ def detail_enchere(identifiant):
         else:
             est_vendeur = False
 
+        if enchere['est_supprimee'] == 0:
+            valeur_btn = "Supprimer l'enchère"
+            route_btn = "Suppression"
+        else:
+            valeur_btn = "Rétablir l'enchère supprimée"
+            route_btn = "Retablir"
+
     if request.method == 'POST':
         msg = ""
         id_enchere = request.form.get("id", default="")
@@ -80,9 +89,17 @@ def detail_enchere(identifiant):
             return redirect(f'/encheres/{id_enchere}', 303)
         else:
             return render_template('detailes.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
-                                   est_vendeur=est_vendeur, validation="is-invalid", message=msg, user=user)
+                                   est_vendeur=est_vendeur, validation="is-invalid", message=msg,
+                                   user=user, valeur_btn=valeur_btn, route_btn=route_btn)
 
     return render_template('detailes.jinja', enchere=enchere, active=active, nom=nom,
-                           mise=mise, est_vendeur=est_vendeur, user=user)
+                           mise=mise, est_vendeur=est_vendeur, user=user, route_btn=route_btn, valeur_btn=valeur_btn)
 
 
+@bp_encheres.route('/Suppression', methods=['POST'])
+def suppression():
+    """Suppression de l'enchère"""
+    id = request.form.get("id", default="")
+
+    if not id:
+        abort(404)
