@@ -10,7 +10,9 @@ bp_encheres = Blueprint('encheres', __name__)
 @bp_encheres.route('/<int:identifiant>', methods=['GET', 'POST'])
 def detail_enchere(identifiant):
     """Affiche-les détailes d'une enchère"""
-    user = session.get("utilisateur")
+    user = None
+    if "utilisateur" in session:
+        user = session.get("utilisateur")
     est_vendeur = False
     est_miseur = False
     nom = ""
