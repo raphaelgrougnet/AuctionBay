@@ -81,10 +81,10 @@ def detail_enchere(identifiant):
 
             return redirect(f'/encheres/{id_enchere}', 303)
         else:
-            return render_template('detailes.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
-                                   est_vendeur=est_vendeur, validation="is-invalid", message=msg, user=user)
+            return render_template('details.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
+                                   est_vendeur=est_vendeur, validation="is-invalid", message=msg, utilisateur=session.get("utilisateur"))
 
-    return render_template('detailes.jinja', enchere=enchere, active=active, nom=nom,
-                           mise=mise, est_vendeur=est_vendeur, user=user)
+    return render_template('details.jinja', enchere=enchere, active=active, nom=nom,
+                           mise=mise, est_vendeur=est_vendeur, utilisateur=session.get("utilisateur"))
 
 

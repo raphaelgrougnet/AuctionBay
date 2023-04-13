@@ -40,7 +40,7 @@
                         {% else %}
                             <div class="card text-bg-light mb-3">
                                 <div class="card-body">
-                                    <p class="card-text">Il n'y a aucune mise présentement !</p>
+                                    <p class="card-text">Il n'y a aucune mise pour cette enchère.</p>
                                 </div>
                             </div>
                         {% endif %}
@@ -63,10 +63,10 @@
                                     <p class="text-warning">Vous êtes le vendeur de cette enchère !</p>
                                 {% endif %}
                             {% else %}
-                                <p class="text-warning">Cette enchère n'est pas active !</p>
+                                <p class="text-warning">Cette enchère n'est pas active.</p>
                             {% endif %}
                         {% else %}
-                            <p class="text-warning">Vous devez vous connecter pour miser !</p>
+                            <p class="text-warning">Vous devez vous <a href="/compte/connexion">connecter</a> pour miser.</p>
                         {% endif %}
                     </div>
                 </div>

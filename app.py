@@ -38,32 +38,37 @@ def page_non_trouvee(error):
     """Affiche la page d'erreur 404"""
     message = "Cette page a peut-être été déplacée ? a été supprimée ? Se cache-t-elle en quarantaine ? " \
               "N'aie jamais existé ?"
-    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=4, message=message), 404
+    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=4, message=message,
+                           utilisateur=session.get("utilisateur")), 404
 
 
 @app.errorhandler(500)
 def erreur_interne(error):
     """Affiche la page d'erreur 500"""
     message = "Un problème est survenu lors de la connexion avec la base de données."
-    return render_template('erreur.jinja', premier_char_erreur=5, dernier_char_erreur=0, message=message), 500
+    return render_template('erreur.jinja', premier_char_erreur=5, dernier_char_erreur=0, message=message,
+                           utilisateur=session.get("utilisateur")), 500
 
 
 @app.errorhandler(403)
 def erreur_compte(error):
     """Affiche la page d'erreur 403"""
     message = "Vous n'avez pas les droits pour accéder à cette page."
-    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=3, message=message), 403
+    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=3, message=message,
+                           utilisateur=session.get("utilisateur")), 403
 
 
 @app.errorhandler(400)
 def erreur_requete(error):
     """Affiche la page d'erreur 400"""
     message = "La requête n'a pas pu être traitée."
-    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=0, message=message), 400
+    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=0, message=message,
+                           utilisateur=session.get("utilisateur")), 400
 
 
 @app.errorhandler(401)
 def erreur_non_autorise(error):
     """Affiche la page d'erreur 401"""
     message = "Vous n'êtes pas autorisé à accéder à cette page. Veuillez vous connecter."
-    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=1, message=message), 401
+    return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=1, message=message,
+                           utilisateur=session.get("utilisateur")), 401
