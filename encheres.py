@@ -11,12 +11,7 @@ bp_encheres = Blueprint('encheres', __name__)
 def detail_enchere(identifiant):
     """Affiche-les détailes d'une enchère"""
     user = session.get("utilisateur")
-    est_vendeur = False
     est_miseur = False
-    nom = ""
-    montant_enchere = 0
-    valeur_btn = ""
-    route_btn = ""
 
     with bd.creer_connexion() as conn:
         enchere = bd.get_enchere(conn, identifiant)
@@ -64,7 +59,6 @@ def detail_enchere(identifiant):
         msg = ""
         id_enchere = request.form.get("id", default="")
         montant = request.form.get("motant_miser", default="")
-        validation = ""
 
         if not montant:
             montant = 0
