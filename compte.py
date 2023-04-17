@@ -61,9 +61,9 @@ def inscription():
 
             utilisateur_trouve = None
 
-            classe_erreur_email = ""
+            ""
             contenu_erreur_email = ""
-            classe_erreur_nom = ""
+            ""
             contenu_erreur_nom = ""
             classe_erreur_mdp = ""
             contenu_erreur_mdp = ""

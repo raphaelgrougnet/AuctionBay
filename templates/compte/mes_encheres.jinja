@@ -32,9 +32,13 @@
                                     <p class="card-text">Aucune mise pour le moment.</p>
                                 {% endif %}
                                 {% if not enchere.est_supprimee %}
-                                    <a href="/encheres/{{ enchere.id_enchere }}" class="btn btn-primary">Détails</a>
+                                    <a href="/encheres/{{ enchere.id_enchere }}" class="btn btn-primary stretched-link">Détails</a>
                                 {% else %}
+
                                     <p class="text-muted">Enchère supprimée par un administrateur.</p>
+                                    {% if utilisateur.est_admin %}
+                                        <a href="/encheres/{{ enchere.id_enchere }}" class="btn btn-primary stretched-link">Détails</a>
+                                    {% endif %}
                                 {% endif %}
 
                             </div>
