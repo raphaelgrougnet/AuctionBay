@@ -95,11 +95,11 @@ def detail_enchere(identifiant):
 
             return redirect(f'/encheres/{id_enchere}', 303)
         else:
-            return render_template('details.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
+            return render_template('details/details.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
                                    est_vendeur=est_vendeur, validation="is-invalid", message=msg,
                                    user=user, valeur_btn=valeur_btn, route_btn=route_btn, utilisateur=user)
 
-    return render_template('details.jinja', enchere=enchere, active=active, nom=nom,
+    return render_template('details/details.jinja', enchere=enchere, active=active, nom=nom,
                            mise=mise, est_vendeur=est_vendeur, user=user, route_btn=route_btn,
                            valeur_btn=valeur_btn, utilisateur=user)
 
@@ -120,7 +120,7 @@ def suppression():
     with bd.creer_connexion() as conn:
         bd.supprimer_enchere(conn, id)
 
-    return render_template('suppression.jinja', id=id, utilisateur=user)
+    return render_template('details/suppression.jinja', id=id, utilisateur=user)
 
 @bp_encheres.route('/retablir', methods=['POST'])
 def retablir():
@@ -138,4 +138,4 @@ def retablir():
     with bd.creer_connexion() as conn:
         bd.retablir_enchere(conn, id)
 
-    return render_template('retablir.jinja', id=id, utilisateur=user)
+    return render_template('details/retablir.jinja', id=id, utilisateur=user)
