@@ -172,3 +172,4 @@ def retablir_enchere(conn, id_enchere):
                 "id_enchere": id_enchere
             }
         )
+

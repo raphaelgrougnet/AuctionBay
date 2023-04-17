@@ -1,12 +1,10 @@
 """
 Démonstration des paramètres obligatoires
 """
-
-from flask import Flask, render_template, session
-
 import bd
 from compte import bp_compte
 from encheres import bp_encheres
+from flask import Flask, render_template, session
 
 app = Flask(__name__)
 
