@@ -33,6 +33,7 @@ def index():
 @app.errorhandler(404)
 def page_non_trouvee(error):
     """Affiche la page d'erreur 404"""
+    print(error)
     message = "Cette page a peut-être été déplacée ? a été supprimée ? Se cache-t-elle en quarantaine ? " \
               "N'aie jamais existé ?"
     return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=4, message=message,
@@ -41,6 +42,7 @@ def page_non_trouvee(error):
 
 @app.errorhandler(500)
 def erreur_interne(error):
+    print(error)
     """Affiche la page d'erreur 500"""
     message = "Un problème est survenu lors de la connexion avec la base de données."
     return render_template('erreur.jinja', premier_char_erreur=5, dernier_char_erreur=0, message=message,
@@ -49,6 +51,7 @@ def erreur_interne(error):
 
 @app.errorhandler(403)
 def erreur_compte(error):
+    print(error)
     """Affiche la page d'erreur 403"""
     message = "Vous n'avez pas les droits pour accéder à cette page."
     return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=3, message=message,
@@ -57,6 +60,7 @@ def erreur_compte(error):
 
 @app.errorhandler(400)
 def erreur_requete(error):
+    print(error)
     """Affiche la page d'erreur 400"""
     message = "La requête n'a pas pu être traitée."
     return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=0, message=message,
@@ -65,6 +69,7 @@ def erreur_requete(error):
 
 @app.errorhandler(401)
 def erreur_non_autorise(error):
+    print(error)
     """Affiche la page d'erreur 401"""
     message = "Vous n'êtes pas autorisé à accéder à cette page. Veuillez vous connecter."
     return render_template('erreur.jinja', premier_char_erreur=4, dernier_char_erreur=1, message=message,
