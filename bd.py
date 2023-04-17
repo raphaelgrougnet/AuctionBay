@@ -2,10 +2,10 @@
 Connexion à la BD
 """
 
-import types
 import contextlib
+import types
+
 import mysql.connector
-import hashlib
 
 
 @contextlib.contextmanager
@@ -139,6 +139,19 @@ def faire_mise(conn, id_enchere, id_miseur, montant):
         )
 
 
+def update_mise_miseur(conn, id_enchere, id_miseur, montant):
+    """Permet au même miseur de miser sur son enchère gangnante"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "UPDATE mise SET montant = %(montant)s WHERE fk_enchere = %(id_enchere)s AND fk_miseur = %(id_miseur)s",
+            {
+                "montant": montant,
+                "id_enchere": id_enchere,
+                "id_miseur": id_miseur
+            }
+        )
+
+
 def supprimer_enchere(conn, id_enchere):
     """Permet de faire la suppression d'une enchère"""
     with conn.get_curseur() as curseur:
@@ -159,4 +172,3 @@ def retablir_enchere(conn, id_enchere):
                 "id_enchere": id_enchere
             }
         )
-

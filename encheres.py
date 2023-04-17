@@ -81,8 +81,6 @@ def detail_enchere(identifiant):
             abort(400)
         elif not active:
             abort(400)
-        elif est_miseur:
-            msg = "Vous êtes déjà le premier sur cette enchère\n"
         elif int(montant) < montant_enchere:
             msg = "Vous devez faire une mise plus grande que celle affichée\n"
         else:
@@ -90,8 +88,12 @@ def detail_enchere(identifiant):
 
         if msg == "":
             validation = "is-valid"
-            with bd.creer_connexion() as conn:
-                bd.faire_mise(conn, id_enchere, user['id_utilisateur'], montant)
+            if est_miseur:
+                with bd.creer_connexion() as conn:
+                    bd.update_mise_miseur(conn, id_enchere, mise['fk_miseur'], montant)
+            else:
+                with bd.creer_connexion() as conn:
+                    bd.faire_mise(conn, id_enchere, user['id_utilisateur'], montant)
 
             return redirect(f'/encheres/{id_enchere}', 303)
         else:
@@ -121,6 +123,7 @@ def suppression():
         bd.supprimer_enchere(conn, id)
 
     return render_template('details/suppression.jinja', id=id, utilisateur=user)
+
 
 @bp_encheres.route('/retablir', methods=['POST'])
 def retablir():

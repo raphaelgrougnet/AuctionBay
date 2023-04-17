@@ -1,9 +1,9 @@
 import datetime
+import hashlib
 import re
 
 from flask import redirect, render_template, request, session, Blueprint
-import hashlib
-import re
+
 import bd
 
 bp_compte = Blueprint('compte', __name__)
