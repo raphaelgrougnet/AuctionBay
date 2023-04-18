@@ -30,6 +30,7 @@ def detail_enchere(identifiant):
         if not mise:
             nom = ""
             montant_enchere = 0
+
         else:
             miseur = bd.get_nom_compte(conn, mise['fk_miseur'])
             nom = miseur['nom']
@@ -37,6 +38,8 @@ def detail_enchere(identifiant):
             if user:
                 if user['id_utilisateur'] == mise['fk_miseur']:
                     est_miseur = True
+
+        montant_min = montant_enchere + 1
 
         date_now = datetime.date.today()
         active = enchere['date_limite'] >= date_now and enchere['est_supprimee'] == 0
@@ -75,7 +78,7 @@ def detail_enchere(identifiant):
             abort(400)
         elif not active:
             abort(400)
-        elif int(montant) < montant_enchere:
+        elif int(montant) <= montant_enchere:
             msg = "Vous devez faire une mise plus grande que celle affichée\n"
         else:
             msg = ""
@@ -92,12 +95,13 @@ def detail_enchere(identifiant):
             return redirect(f'/encheres/{id_enchere}', 303)
         else:
             return render_template('details/details.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
-                                   est_vendeur=est_vendeur, validation="is-invalid", message=msg,
-                                   user=user, valeur_btn=valeur_btn, route_btn=route_btn, utilisateur=user)
+                                   est_vendeur=est_vendeur, validation="is-invalid",
+                                   message=msg, user=user, valeur_btn=valeur_btn,
+                                   route_btn=route_btn, utilisateur=user, montant_min=montant_min)
 
     return render_template('details/details.jinja', enchere=enchere, active=active, nom=nom,
                            mise=mise, est_vendeur=est_vendeur, user=user, route_btn=route_btn,
-                           valeur_btn=valeur_btn, utilisateur=user)
+                           valeur_btn=valeur_btn, utilisateur=user, montant_min=montant_min)
 
 
 @bp_encheres.route('/suppression', methods=['POST'])
