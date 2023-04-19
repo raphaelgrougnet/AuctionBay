@@ -84,7 +84,6 @@ def detail_enchere(identifiant):
             msg = ""
 
         if msg == "":
-            validation = "is-valid"
             if est_miseur:
                 with bd.creer_connexion() as conn:
                     bd.update_mise_miseur(conn, id_enchere, mise['fk_miseur'], montant)
