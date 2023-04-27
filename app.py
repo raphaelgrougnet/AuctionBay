@@ -21,7 +21,7 @@ app.register_blueprint(bp_encheres, url_prefix='/encheres')
 # Enregistre toutes les routes disponibles dans dp_jeu avec le préfixe /jeu
 
 
-app.secret_key = "96dd4003f9cdd09ba3ddb7d5fa66b4ce030773766a50484aa9ddd619a0ac71f0"
+app.secret_key = os.getenv('SECRET_KEY')
 
 
 @app.route('/')
