@@ -1,7 +1,8 @@
 """
 Connexion à la BD
 """
-
+import dotenv
+import os
 import contextlib
 import types
 
@@ -12,10 +13,10 @@ import mysql.connector
 def creer_connexion():
     """Pour créer une connexion à la BD"""
     conn = mysql.connector.connect(
-        user="garneau",
-        password="qwerty123",
-        host="127.0.0.1",
-        database="tp2_enchere",
+        user=os.getenv("BD_UTILISATEUR"),
+        password=os.getenv("BD_MOT_DE_PASSE"),
+        host=os.getenv("BD_HOST"),
+        database=os.getenv("BD_NOM"),
         raise_on_warnings=True
     )
 

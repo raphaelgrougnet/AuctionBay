@@ -1,10 +1,16 @@
 """
 Démonstration des paramètres obligatoires
 """
+import os
+
+import dotenv
 import bd
 from compte import bp_compte
 from encheres import bp_encheres
 from flask import Flask, render_template, session
+
+if not os.getenv('BD_UTILISATEUR'):
+    dotenv.load_dotenv(".env")
 
 app = Flask(__name__)
 
