@@ -2,7 +2,7 @@ import datetime
 import hashlib
 import re
 
-from flask import redirect, render_template, request, session, Blueprint
+from flask import redirect, render_template, request, session, Blueprint, current_app as app
 
 import bd
 
@@ -25,24 +25,31 @@ def connexion():
 
             courriel = request.form.get('courriel', default="")
             mdp = request.form.get('mdp', default="")
-
+            app.logger.info("Début de la connexion pour le courriel %s", courriel)
             mdpHashed = hacher_mdp(mdp)
 
             utilisateur_trouve = bd.get_compte(conn, courriel, mdpHashed)
             if utilisateur_trouve:
                 session.permanent = True
                 session["utilisateur"] = utilisateur_trouve
+                app.logger.info("Connexion réussie pour le courriel %s", courriel)
+                app.logger.info("Redirection vers la page d'accueil de l'utilisateur %s", courriel)
                 return redirect("/", 303)
 
             if not utilisateur_trouve:
+                app.logger.info("Connexion échouée pour le courriel %s", courriel)
                 return render_template('compte/connexion.jinja', classe_erreur="is-invalid")
+        app.logger.info("Affichage de la page de connexion")
         return render_template('compte/connexion.jinja', utilisateur=session.get("utilisateur"))
 
 
 @bp_compte.route('/deconnexion')
 def deconnexion():
     """Permet de se déconnecter"""
+    user = session.get("utilisateur")
+
     session.pop("utilisateur", None)
+    app.logger.info("Déconnexion réussie pour le courriel %s", user['courriel'])
     return redirect("/", 303)
 
 
@@ -56,7 +63,7 @@ def inscription():
             mdp = request.form.get('mdp', default="")
             mdp_confirm = request.form.get('mdp_confirm', default="")
             nom = request.form.get('nom', default="")
-
+            app.logger.info("Début de l'inscription pour le courriel %s", courriel)
             mdpHashed = hacher_mdp(mdp)
 
             utilisateur_trouve = None
@@ -68,7 +75,7 @@ def inscription():
             classe_erreur_mdp = ""
             contenu_erreur_mdp = ""
             classe_erreur_mdp_confirm = ""
-
+            app.logger.info("Début de la vérification des champs")
             if nom == "":
                 classe_erreur_nom = "is-invalid"
                 contenu_erreur_nom = "Le nom est obligatoire."
@@ -115,7 +122,9 @@ def inscription():
                 classe_erreur_mdp = "is-invalid"
                 contenu_erreur_mdp = "Les mots de passe ne correspondent pas."
 
-            if classe_erreur_email != "is-valid" or classe_erreur_nom != "is-valid" or classe_erreur_mdp != "" or classe_erreur_mdp_confirm != "":
+            if classe_erreur_email != "is-valid" or classe_erreur_nom != "is-valid" or classe_erreur_mdp != "" \
+                    or classe_erreur_mdp_confirm != "":
+                app.logger.info("Erreur dans les champs")
                 return render_template('compte/inscription.jinja',
                                        classe_erreur_email=classe_erreur_email,
                                        contenu_erreur_email=contenu_erreur_email,
@@ -129,9 +138,11 @@ def inscription():
                                        utilisateur=session.get("utilisateur"))
 
             if not utilisateur_trouve:
+                app.logger.info("Inscription réussie pour le courriel %s", courriel)
                 session["utilisateur"] = bd.ajouter_compte(conn, courriel, mdpHashed, nom)
+                app.logger.info("Redirection vers la page d'accueil de l'utilisateur %s", courriel)
                 return redirect("/", 303)
-
+        app.logger.info("Affichage de la page d'inscription")
         return render_template('compte/inscription.jinja', utilisateur=session.get("utilisateur"))
 
 
@@ -139,9 +150,11 @@ def inscription():
 def mes_encheres():
     """Permet d'afficher les enchères de l'utilisateur"""
     if not session.get("utilisateur"):
+        app.logger.info("Redirection vers la page de connexion car l'utilisateur n'est pas connecté")
         return redirect("/compte/connexion", 303)
 
     with bd.creer_connexion() as conn:
+        app.logger.info("Affichage des enchères de l'utilisateur %s", session.get("utilisateur")["courriel"])
         encheres = bd.get_encheres_utilisateur(conn, session.get("utilisateur")["id_utilisateur"])
         date_now = datetime.date.today()
         for enchere in encheres:
@@ -159,9 +172,11 @@ def mes_encheres():
 def mes_mises():
     """Permet d'afficher les mises de l'utilisateur"""
     if not session.get("utilisateur"):
+        app.logger.info("Redirection vers la page de connexion car l'utilisateur n'est pas connecté")
         return redirect("/compte/connexion", 303)
 
     with bd.creer_connexion() as conn:
+        app.logger.info("Affichage des mises de l'utilisateur %s", session.get("utilisateur")["courriel"])
         encheres = bd.get_mises_utilisateur(conn, session.get("utilisateur")["id_utilisateur"])
         date_now = datetime.date.today()
         for enchere in encheres:
