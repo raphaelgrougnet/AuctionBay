@@ -30,14 +30,14 @@ app.secret_key = os.getenv('SECRET_KEY')
 def index():
     """Affiche l'accueil"""
 
-    with bd.creer_connexion() as conn:
-        encheres = bd.get_encheres(conn)
+    # with bd.creer_connexion() as conn:
+    #     encheres = bd.get_encheres(conn)
     if session.get("utilisateur"):
         app.logger.info("Accueil affiché pour l'utilisateur %s", session.get("utilisateur")["courriel"])
     else:
         app.logger.info("Accueil affiché pour l'utilisateur %s", "anonyme")
 
-    return render_template('index.jinja', encheres=encheres,
+    return render_template('index.jinja',
                            utilisateur=session.get("utilisateur"),
                            classe_accueil="active")
 
