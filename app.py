@@ -7,6 +7,7 @@ import dotenv
 import bd
 from compte import bp_compte
 from encheres import bp_encheres
+from api import bp_api
 from flask import Flask, render_template, session, request
 
 if not os.getenv('BD_UTILISATEUR'):
@@ -16,6 +17,7 @@ app = Flask(__name__)
 
 app.register_blueprint(bp_compte, url_prefix='/compte')
 app.register_blueprint(bp_encheres, url_prefix='/encheres')
+app.register_blueprint(bp_api, url_prefix='/api')
 
 
 # Enregistre toutes les routes disponibles dans dp_jeu avec le préfixe /jeu

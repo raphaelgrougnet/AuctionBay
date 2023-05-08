@@ -44,10 +44,14 @@ def get_curseur(self):
         curseur.close()
 
 
-def get_encheres(conn):
+def get_encheres(conn, offset):
     """Obtient toutes les enchères"""
     with conn.get_curseur() as curseur:
-        curseur.execute("SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere order by date_limite desc")
+        curseur.execute("SELECT id_enchere, titre, date_limite, est_supprimee "
+                        "FROM enchere order by date_limite desc limit 12 offset %(offset)s",
+                        {
+                            "offset": offset
+                        })
         return curseur.fetchall()
 
 
