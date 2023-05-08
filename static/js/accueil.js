@@ -41,7 +41,7 @@ async function AfficherEncheres(offset) {
         }
     }
     if (listeEncheres.childElementCount === 0) {
-        listeEncheres.innerHTML = `    <div class="clo-12 alert alert-info mx-3">#}
+        listeEncheres.innerHTML = `    <div class="clo-12 alert alert-info mx-3">
                                             <p class="text-center m-0">Aucune enchère n'est disponible pour le moment.</p>
                                        </div>`
     }
