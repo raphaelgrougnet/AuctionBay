@@ -30,7 +30,7 @@ def index():
 
     with bd.creer_connexion() as conn:
         encheres = bd.get_encheres(conn)
-    app.logger.info("Accueil affiché pour l'utilisateur %s", session.get("utilisateur") or "anonyme")
+    app.logger.info("Accueil affiché pour l'utilisateur %s", session.get("utilisateur")["courriel"] or "anonyme")
     return render_template('index.jinja', encheres=encheres,
                            utilisateur=session.get("utilisateur"),
                            classe_accueil="active")
