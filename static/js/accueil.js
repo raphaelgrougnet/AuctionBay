@@ -23,6 +23,7 @@ async function afficherEncheres(offset) {
     let utilisateur = await recupererUtilisateur();
     document.querySelectorAll(".card-placeholder").forEach((card) => {
         card.classList.add("cacher");
+        card.remove();
         });
     if (encheres.length > 0) {
         for (let enchere of encheres) {
@@ -78,6 +79,7 @@ async function afficherEncheres(offset) {
 
 
 async function scrollHandler() {
+    ///COMMENT ON SAIT QUAND ON ARRIVE A LA FIN ET QUE YA PLUS DE DONNEES A AFFICHER
     while ((innerHeight + scrollY) > 0.9 * document.body.offsetHeight) {
         await afficherEncheres(numero);
         numero += 12;
