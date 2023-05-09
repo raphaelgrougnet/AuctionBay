@@ -48,7 +48,7 @@ def get_encheres(conn, offset):
     """Obtient toutes les enchères"""
     with conn.get_curseur() as curseur:
         curseur.execute("SELECT id_enchere, titre, date_limite, est_supprimee "
-                        "FROM enchere order by date_limite desc limit 12 offset %(offset)s",
+                        "FROM enchere order by date_limite desc,id_enchere limit 12 offset %(offset)s",
                         {
                             "offset": offset
                         })
@@ -177,3 +177,13 @@ def retablir_enchere(conn, id_enchere):
                 "id_enchere": id_enchere
             }
         )
+
+
+def get_suggestions(conn, search):
+    """Obtient les suggestions de recherche"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere "
+            "WHERE titre LIKE %(search)s AND est_supprimee = 0 order by date_limite desc limit 10",
+            {"search": "%" + search + "%"})
+        return curseur.fetchall()
