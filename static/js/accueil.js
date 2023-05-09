@@ -1,8 +1,15 @@
 "use strict";
-let numero = 12;
+let numero = 0;
+
+const lstSuggestion = document.getElementById("listeSuggestions");
+    const searchbar = document.getElementById("search");
+    const divSuggestions = document.getElementById("divSuggestions");
+
+
+
+
 async function afficherEncheres(offset) {
     const listeEncheres = document.getElementById("div-encheres");
-
     for (let i = 0; i < 12; i++) {
         let divPlaceholder = document.createElement("div");
         divPlaceholder.classList.add("col-sm-12", "col-md-6", "col-lg-3", "card-placeholder");
@@ -29,27 +36,7 @@ async function afficherEncheres(offset) {
         for (let enchere of encheres) {
             let div = document.createElement("div");
             div.classList.add("col-sm-12", "col-md-6", "col-lg-3");
-            if (enchere["est_supprimee"] === 1 && utilisateur !== null && utilisateur["est_admin"] === 1) {
-
-                div.innerHTML = `  <div class="card border-danger">
-                                    <img src="https://picsum.photos/seed/${enchere["id_enchere"]}/900/1000" class="card-img-top"
-                                         alt="Image de {{ e.titre }}">
-                                    <div class="card-body">
-                                        <h5 class="card-title">${enchere["titre"]}</h5>
-                                        <p class="card-text">${new Date(enchere["date_limite"]).getDay()}</p>
-                                        <p class="card-text text-muted">Supprimée</p>
-                                        <a href="/encheres/${enchere["id_enchere"]}" class="btn btn-primary stretched-link">Détails</a>
-                                    </div>
-                                </div>
-                             `
-
-                listeEncheres.appendChild(div);
-
-
-
-
-            }
-            else {
+            if (enchere["est_supprimee"] === 0) {
                 div.innerHTML = `<div class="card">
                                     <img src="https://picsum.photos/seed/${enchere["id_enchere"]}/900/1000" class="card-img-top"
                                          alt="Image de {{ e.titre }}">
@@ -63,6 +50,26 @@ async function afficherEncheres(offset) {
 
 
                 listeEncheres.appendChild(div);
+
+            }
+            else {
+                if (utilisateur !== null && utilisateur["est_admin"] === 1) {
+                    div.innerHTML = `  <div class="card border-danger">
+                                    <img src="https://picsum.photos/seed/${enchere["id_enchere"]}/900/1000" class="card-img-top"
+                                         alt="Image de {{ e.titre }}">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${enchere["titre"]}</h5>
+                                        <p class="card-text">${new Date(enchere["date_limite"]).getFullYear()}-${new Date(enchere["date_limite"]).getMonth()}-${new Date(enchere["date_limite"]).getDay()}</p>
+                                        <p class="card-text text-muted">Supprimée</p>
+                                        <a href="/encheres/${enchere["id_enchere"]}" class="btn btn-primary stretched-link">Détails</a>
+                                    </div>
+                                </div>
+                             `
+
+                    listeEncheres.appendChild(div);
+                }
+
+
             }
 
 
@@ -74,13 +81,16 @@ async function afficherEncheres(offset) {
                                        </div>`
     }
 
+
+
 }
 
 
 
 async function scrollHandler() {
     ///COMMENT ON SAIT QUAND ON ARRIVE A LA FIN ET QUE YA PLUS DE DONNEES A AFFICHER
-    while ((innerHeight + scrollY) > 0.9 * document.body.offsetHeight) {
+    ///POURQUOI JE PEUX ENCORE SCROLL MEME QUAND YA AWAIT
+    while ((innerHeight + scrollY) > 0.80 * document.body.offsetHeight) {
         await afficherEncheres(numero);
         numero += 12;
 
@@ -93,8 +103,43 @@ async function recupererUtilisateur(){
     return envoyerRequeteAjax("/api/recuperer-utilisateur");
 }
 
+
+async function recupererSuggestions(){
+    let suggestions = await envoyerRequeteAjax("/api/recuperer-suggestions/" + searchbar.value);
+    lstSuggestion.innerHTML = "";
+    if (suggestions.length === 0){
+        let li = document.createElement("li");
+        li.innerText = "Aucune suggestion";
+        lstSuggestion.appendChild(li);
+    }
+    else {
+            for (let suggestion of suggestions){
+            let li = document.createElement("li");
+            let a = document.createElement("a");
+            a.href = "/encheres/" + suggestion["id_enchere"];
+            a.innerText = suggestion["titre"];
+            li.appendChild(a);
+            lstSuggestion.appendChild(li);
+        }
+    }
+
+}
+
+async function typeSearchHandler(){
+    if (searchbar.value.trim().length > 2){
+        divSuggestions.classList.remove("cacher");
+        await recupererSuggestions();
+    }
+    else {
+        divSuggestions.classList.add("cacher");
+        lstSuggestion.innerHTML = "";
+    }
+}
+
+
 async function initialize() {
-    await afficherEncheres(numero);
+    searchbar.addEventListener("input", typeSearchHandler);
+    await scrollHandler()
     window.addEventListener("scroll", scrollHandler)
 
 }
