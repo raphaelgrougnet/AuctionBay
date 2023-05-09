@@ -1,8 +1,17 @@
 {% extends "base.jinja" %}
 
 {% block contenu %}
-    <script src="/static/js/accueil.js"></script>
-    <h1 class="fw-normal m-3">Accueil</h1>
+    <script src="/static/js/accueil.js" defer></script>
+    <h1 class="fw-normal m-3 text-center">Accueil</h1>
+    <div class="searchbar">
+        <label for="search" hidden="hidden">Rechercher une enchère</label>
+        <input type="search" id="search" placeholder="Rechercher une enchère">
+        <button class="btn btn-primary">Rechercher</button>
+        <div class="suggestions cacher" id="divSuggestions">
+            <ul id="listeSuggestions">
+            </ul>
+        </div>
+    </div>
     <div class="container p-3">
         <div class="row gy-3 gx-3 " id="div-encheres">
 
