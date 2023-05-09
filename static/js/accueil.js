@@ -105,15 +105,21 @@ async function recupererUtilisateur(){
 
 
 async function recupererSuggestions(){
+    /// AJOUT UN CANCEL AU DEBUT DE LA FONCTION POUR ANNULER LES REQUETES PRECEDENTES
+    lstSuggestion.innerHTML = `
+        <li class="d-flex justify-content-center"><div class="race-by"></div></li>
+    `;
     let suggestions = await envoyerRequeteAjax("/api/recuperer-suggestions/" + searchbar.value);
-    lstSuggestion.innerHTML = "";
+
     if (suggestions.length === 0){
+        lstSuggestion.innerHTML = "";
         let li = document.createElement("li");
         li.innerText = "Aucune suggestion";
         lstSuggestion.appendChild(li);
     }
     else {
-            for (let suggestion of suggestions){
+        lstSuggestion.innerHTML = "";
+        for (let suggestion of suggestions){
             let li = document.createElement("li");
             let a = document.createElement("a");
             a.href = "/encheres/" + suggestion["id_enchere"];
