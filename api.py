@@ -11,6 +11,7 @@ def afficher_encheres(offset):
     with bd.creer_connexion() as conn:
         app.logger.info("Get des enchères depuis api")
         encheres = bd.get_encheres(conn, offset)
+        time.sleep(1)
     return jsonify(encheres)
 
 
@@ -18,3 +19,12 @@ def afficher_encheres(offset):
 def recuperer_utilisateur():
     """Récupère l'utilisateur"""
     return jsonify(session.get("utilisateur"))
+
+
+@bp_api.route('/recuperer-suggestions/<search>')
+def recuperer_suggestions(search):
+    """Récupère les suggestions"""
+    with bd.creer_connexion() as conn:
+        suggestions = bd.get_suggestions(conn, search)
+        time.sleep(2)
+    return jsonify(suggestions)
