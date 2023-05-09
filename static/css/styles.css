@@ -11128,4 +11128,48 @@ a:hover {
   display: none;
 }
 
+.searchbar {
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+.searchbar input {
+  width: 100%;
+  padding: 1rem;
+}
+.searchbar .suggestions {
+  position: absolute;
+  z-index: 1000;
+  top: 100%;
+  left: 0;
+  background: #161616;
+  width: 100%;
+  max-height: 400px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+.searchbar .suggestions ul {
+  padding: 0;
+  margin: 0;
+}
+.searchbar .suggestions li {
+  list-style: none;
+  padding: 1rem;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+  color: white;
+}
+.searchbar .suggestions li:hover {
+  background: #ffffff;
+  color: #212121;
+}
+.searchbar .suggestions li:hover a {
+  color: #212121;
+  text-decoration: none;
+}
+.searchbar .suggestions li a {
+  color: white;
+  text-decoration: none;
+}
+
 /*# sourceMappingURL=styles.css.map */
