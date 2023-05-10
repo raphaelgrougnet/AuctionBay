@@ -6,7 +6,7 @@
     <div class="searchbar">
         <label for="search" hidden="hidden">Rechercher une enchère</label>
         <input type="search" id="search" placeholder="Rechercher une enchère">
-        <button class="btn btn-primary">Rechercher</button>
+        <button class="btn btn-primary" id="btnSearch">Rechercher</button>
         <div class="suggestions" id="divSuggestions">
             <ul id="listeSuggestions">
             </ul>
@@ -53,6 +53,12 @@
 {#                </div>#}
 {#            {% endif %}#}
         </div>
+    </div>
+    <div class="d-flex justify-content-center p-3" >
+        <svg class="ring cacher" viewBox="25 25 50 50" stroke-width="5" id="loader-encheres">
+            <circle cx="50" cy="50" r="20" />
+        </svg>
+
     </div>
 
 {% endblock %}
