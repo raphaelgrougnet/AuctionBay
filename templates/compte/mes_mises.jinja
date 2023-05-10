@@ -13,7 +13,7 @@
                     <div class="col-sm-12 col-md-6 col-lg-3">
                     {% if enchere.est_supprimee %}
                         <div class="card border-danger">
-                    {% elif enchere.est_invalide or enchere.derniere_mise.montant > enchere.montant %}
+                    {% elif enchere.est_invalide or enchere.derniere_mise > enchere.montant %}
                         <div class="card border-warning">
                     {% else %}
                         <div class="card border-success">
@@ -34,8 +34,8 @@
                                     </div>
                                     <span>Dernière mise :</span>
                                     <div class="d-flex">
-                                        <p class="card-text">{{ enchere.derniere_mise.dernier_miseur }}</p>
-                                        <p class="card-text ms-auto">{{ enchere.derniere_mise.montant }} $</p>
+                                        <p class="card-text">{{ enchere.dernier_miseur }}</p>
+                                        <p class="card-text ms-auto">{{ enchere.derniere_mise }} $</p>
 
 
                                     </div>

@@ -44,6 +44,12 @@ def detail_enchere(identifiant):
             if user:
                 if user['id_utilisateur'] == mise['fk_miseur']:
                     est_miseur = True
+                else:
+                    mises_utilisateur = bd.get_mises_utilsateur_details(conn, user['id_utilisateur'])
+                    for mise_utilisateur in mises_utilisateur:
+                        if mise_utilisateur['fk_miseur'] == user['id_utilisateur']:
+                            est_miseur = True
+                            break
 
         montant_min = montant_enchere + 1
 
@@ -101,7 +107,7 @@ def detail_enchere(identifiant):
 
                 with bd.creer_connexion() as conn:
                     app.logger.info("Mise à jour de la mise de l'utilisateur %s sur l'enchère %s", user['courriel'], id_enchere)
-                    bd.update_mise_miseur(conn, id_enchere, mise['fk_miseur'], montant)
+                    bd.update_mise_miseur(conn, id_enchere, session["utilisateur"]["id_utilisateur"], montant)
             else:
                 with bd.creer_connexion() as conn:
                     app.logger.info("Ajout de la mise de l'utilisateur %s sur l'enchère %s", user['courriel'], id_enchere)

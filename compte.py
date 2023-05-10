@@ -182,8 +182,13 @@ def mes_mises():
         for enchere in encheres:
             enchere["est_invalide"] = enchere["date_limite"] < date_now
             enchere["miseur"] = bd.get_nom_compte(conn, session["utilisateur"]["id_utilisateur"])["nom"]
-            enchere["derniere_mise"] = bd.get_mise_enchere(conn, enchere["id_enchere"])
-            enchere["derniere_mise"]["dernier_miseur"] = bd.get_nom_compte(conn, enchere["derniere_mise"]["fk_miseur"])[
+            enchere["montant"] = bd.get_mise_utilsateur_details_enchere(conn, session["utilisateur"]["id_utilisateur"], enchere["id_enchere"])["montant"]
+            # enchere["derniere_mise"] = bd.get_mise_enchere(conn, enchere["id_enchere"])
+            # enchere["derniere_mise"]["dernier_miseur"] = bd.get_nom_compte(conn, enchere["derniere_mise"]["fk_miseur"])[
+            #     "nom"]
+            miseActuelle = bd.get_mise_enchere(conn, enchere["id_enchere"])
+            enchere["derniere_mise"] = miseActuelle["montant"]
+            enchere["dernier_miseur"] = bd.get_nom_compte(conn, miseActuelle["fk_miseur"])[
                 "nom"]
 
         return render_template('compte/mes_mises.jinja', encheres=encheres,

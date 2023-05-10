@@ -122,13 +122,34 @@ def get_mises_utilisateur(conn, id_utilisateur):
     """Obtient les mises d'un utilisateur"""
     with conn.get_curseur() as curseur:
         curseur.execute(
-            "SELECT e.id_enchere, e.titre, e.description, e.date_limite, e.est_supprimee, e.fk_vendeur, m.montant "
+            "SELECT e.id_enchere, e.titre, e.description, e.date_limite, e.est_supprimee "
             "FROM `enchere` e "
             "JOIN mise m ON e.id_enchere = m.fk_enchere "
             "JOIN utilisateur u on u.id_utilisateur = m.fk_miseur "
             "WHERE u.id_utilisateur = %(id_utilisateur)s order by date_limite desc",
             {"id_utilisateur": id_utilisateur})
         return curseur.fetchall()
+
+
+def get_mises_utilsateur_details(conn, id_utilisateur):
+    """Obtient les mises d'un utilisateur"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT fk_miseur, montant, fk_enchere FROM mise "
+            "WHERE fk_miseur = %(id_miseur)s order by montant desc",
+            {"id_miseur": id_utilisateur})
+        return curseur.fetchall()
+
+
+def get_mise_utilsateur_details_enchere(conn, id_utilisateur, id_enchere):
+    """Obtient les mises d'un utilisateur"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT fk_miseur, montant, fk_enchere FROM mise "
+            "WHERE fk_miseur = %(id_miseur)s AND fk_enchere = %(id_enchere)s order by montant desc limit 1",
+            {"id_miseur": id_utilisateur,
+             "id_enchere": id_enchere})
+        return curseur.fetchone()
 
 
 def faire_mise(conn, id_enchere, id_miseur, montant):
