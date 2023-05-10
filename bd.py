@@ -179,11 +179,21 @@ def retablir_enchere(conn, id_enchere):
         )
 
 
+def get_encheres_recherche(conn, offset, search):
+    """Obtient les enchères recherchées"""
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere "
+            "WHERE titre LIKE %(search)s AND est_supprimee = 0 order by date_limite desc limit 12 offset %(offset)s",
+            {"search": "%" + search + "%", "offset": offset})
+        return curseur.fetchall()
+
+
 def get_suggestions(conn, search):
     """Obtient les suggestions de recherche"""
     with conn.get_curseur() as curseur:
         curseur.execute(
             "SELECT id_enchere, titre, date_limite, est_supprimee FROM enchere "
-            "WHERE titre LIKE %(search)s AND est_supprimee = 0 order by date_limite desc limit 10",
+            "WHERE titre LIKE %(search)s AND est_supprimee = 0 order by date_limite desc limit 5",
             {"search": "%" + search + "%"})
         return curseur.fetchall()
