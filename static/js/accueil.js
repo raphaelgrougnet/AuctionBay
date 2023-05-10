@@ -218,6 +218,11 @@ async function clickSearchHandler(){
 async function initialize() {
     searchbar.addEventListener("input", typeSearchHandler);
     btnSearch.addEventListener("click", clickSearchHandler);
+    searchbar.addEventListener("keydown", function(e){
+        if (e.key === "Enter"){
+            clickSearchHandler();
+        }
+    })
     await scrollHandler()
     window.addEventListener("scroll", scrollHandler)
 
