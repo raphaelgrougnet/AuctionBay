@@ -256,8 +256,24 @@ async function clickSearchHandler(){
 }
 
 
+function fermerMenu(){
+     // Remplacez 'menu' par l'ID de votre menu
+
+    document.addEventListener('click', function(event) {
+    let estClicDansMenu = divSuggestions.contains(event.target); // Vérifie si le clic est à l'intérieur du menu
+    estClicDansMenu = searchbar.contains(event.target); // Vérifie si le clic est à l'intérieur du menu
+
+    if (!estClicDansMenu) {
+      // Fermer le menu ici
+      divSuggestions.classList.add("cacher");
+    }
+  });
+}
+
 async function initialize() {
+    fermerMenu()
     searchbar.addEventListener("input", typeSearchHandler);
+    searchbar.addEventListener("focus", typeSearchHandler);
     btnSearch.addEventListener("click", clickSearchHandler);
     searchbar.addEventListener("keydown", function(e){
         if (e.key === "Enter"){
