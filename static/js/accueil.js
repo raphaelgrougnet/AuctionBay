@@ -8,8 +8,14 @@ const btnSearch = document.getElementById("btnSearch");
 const listeEncheres = document.getElementById("div-encheres");
 const loaderEncheres = document.getElementById("loader-encheres");
 let recherche = ""
-
 const offset = 14
+
+/**
+ * Fonction qui permet d'afficher les enchères sur la page d'accueil
+ * @param pOffset
+ * @param recherche
+ * @returns {Promise<{[p: string]: *}>}
+ */
 async function afficherEncheres(pOffset, recherche = "") {
 
     // for (let i = 0; i < offset; i++) {
@@ -34,7 +40,7 @@ async function afficherEncheres(pOffset, recherche = "") {
 
 
     //Recuperation des enchères avec AJAX
-    let encheres = {};
+    let encheres;
     if (recherche === "") {
         encheres = await envoyerRequeteAjax("/api/afficher-encheres/" + pOffset);
     }
@@ -44,15 +50,6 @@ async function afficherEncheres(pOffset, recherche = "") {
 
     //Recuperation de l'utilisateur
     let utilisateur = await recupererUtilisateur();
-
-
-    // document.querySelectorAll(".card-placeholder").forEach((card) => {
-    //     // card.classList.add("cacher");
-    //     card.remove();
-    //     });
-
-    //Cacher le loader
-
 
     //Affichage des enchères
     if (encheres.length > 0) {
@@ -102,7 +99,9 @@ async function afficherEncheres(pOffset, recherche = "") {
 
         }
     }
+    ///Cache le loader
     loaderEncheres.classList.add("cacher");
+
     //Affichage du message d'aucune enchère
     if (listeEncheres.childElementCount === 0) {
         listeEncheres.innerHTML = `    <div class="clo-12 alert alert-info mx-3">
@@ -110,35 +109,48 @@ async function afficherEncheres(pOffset, recherche = "") {
                                        </div>`
     }
 
+    ///Retourne les enchères pour vérifier s'il y en a encore à afficher
     return encheres;
 
 }
 
 
-
+/**
+ * Fonction qui permet de gérer le scroll de la page d'accueil afin d'ajouter des enchères continuellement
+ * tant qu'on voit le bas de la page et qu'il y a des enchères à afficher
+ * @returns {Promise<void>}
+ */
 async function scrollHandler() {
-    ///COMMENT ON SAIT QUAND ON ARRIVE A LA FIN ET QUE YA PLUS DE DONNEES A AFFICHER
-    ///POURQUOI JE PEUX ENCORE SCROLL MEME QUAND YA AWAIT
-
     while ((innerHeight + scrollY) > 0.85 * document.body.offsetHeight) {
 
+        ///Si il n'y a rien dans la recherche
         if (searchbar.value === "") {
+            ///Remove le scrollHandler pour ne pas faire de requête AJAX en boucle
             window.removeEventListener("scroll", scrollHandler);
+            ///Afficher les enchères
             let enchereActive = await afficherEncheres(numero);
+            ///Ajout du scrollHandler pour pouvoir faire une nouvelle requête AJAX
             window.addEventListener("scroll", scrollHandler);
+            ///S'il n'y a plus d'enchère à afficher, on enlève le scrollHandler
             if (enchereActive.length === 0) {
                 window.removeEventListener("scroll", scrollHandler);
 
                 break
             }
+            //Ajout de l'offset pour la prochaine requête AJAX
             numero +=offset;
         }
+        ///Si il y a quelque chose dans la recherche
         else {
+            ///Remove le scrollHandler pour ne pas faire de requête AJAX en boucle
             window.removeEventListener("scroll", scrollHandler);
-
+            ///Afficher les enchères
             let enchereActive=  await afficherEncheres(numero, recherche);
+            ///Ajout de l'offset pour la prochaine requête AJAX
             numero += offset;
+            ///Ajout du scrollHandler pour pouvoir faire une nouvelle requête AJAX
             window.addEventListener("scroll", scrollHandler);
+            ///S'il n'y a plus d'enchère à afficher, on enlève le scrollHandler
             if (enchereActive.length === 0) {
                 window.removeEventListener("scroll", scrollHandler);
 
@@ -151,12 +163,20 @@ async function scrollHandler() {
 
 }
 
+/**
+ * Fonction qui permet de récupérer l'utilisateur
+ * @returns {Promise<Record<string, *>>}
+ */
 async function recupererUtilisateur(){
     return envoyerRequeteAjax("/api/recuperer-utilisateur");
 }
 
-
+/**
+ * Fonction qui permet de récupérer les suggestions de recherche
+ * @returns {Promise<void>}
+ */
 async function recupererSuggestions(){
+    ///Affiche le loader
     lstSuggestion.innerHTML = `
         <li class="d-flex justify-content-center"><div class="race-by"></div></li>
     `
@@ -168,16 +188,24 @@ async function recupererSuggestions(){
     }
 
     controler = new AbortController()
+
+    ///Recuperation des suggestions
     let suggestions = await envoyerRequeteAjax("/api/recuperer-suggestions/" + searchbar.value, "GET", {}, controler);
 
+    ///Affichage des suggestions
+    ///S'il n'y a pas de suggestions
     if (suggestions.length === 0){
+        ///Vide la liste de suggestions
         lstSuggestion.innerHTML = "";
+        ///Création d'un li pour afficher qu'il n'y a pas de suggestions
         let li = document.createElement("li");
         li.innerText = "Aucune suggestion";
         lstSuggestion.appendChild(li);
     }
     else {
+        ///Vide la liste de suggestions
         lstSuggestion.innerHTML = "";
+        ///Création d'un li pour chaque suggestion
         for (let suggestion of suggestions){
             let li = document.createElement("li");
             let a = document.createElement("a");
@@ -190,17 +218,30 @@ async function recupererSuggestions(){
 
 }
 
+/**
+ * Fonction qui permet de gérer l'input de la barre de recherche
+ * @returns {Promise<void>}
+ */
 async function typeSearchHandler(){
+    ///Si la recherche contient plus de 2 caractères
     if (searchbar.value.trim().length > 2){
+        ///Affiche la div de suggestions
         divSuggestions.classList.remove("cacher");
+        ///Recuperate les suggestions
         await recupererSuggestions();
     }
     else {
+        ///Cache la div de suggestions
         divSuggestions.classList.add("cacher");
+        ///Vide la liste de suggestions
         lstSuggestion.innerHTML = "";
     }
 }
 
+/**
+ * Fonction qui permet de gérer le click sur le bouton de recherche
+ * @returns {Promise<void>}
+ */
 async function clickSearchHandler(){
     window.addEventListener("scroll", scrollHandler)
     divSuggestions.classList.add("cacher");
