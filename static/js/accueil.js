@@ -255,7 +255,9 @@ async function clickSearchHandler(){
 
 }
 
-
+/**
+ * Fonction qui permet de fermer le menu de suggestions de recherche
+ */
 function fermerMenu(){
      // Remplacez 'menu' par l'ID de votre menu
 
