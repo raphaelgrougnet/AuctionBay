@@ -36,6 +36,7 @@ def detail_enchere(identifiant):
         if not mise:
             nom = ""
             montant_enchere = 0
+
         else:
             miseur = bd.get_nom_compte(conn, mise['fk_miseur'])
             nom = miseur['nom']
@@ -60,6 +61,56 @@ def detail_enchere(identifiant):
             valeur_btn = "Rétablir l'enchère supprimée"
             route_btn = "retablir"
 
+    if request.method == 'POST':
+        msg = ""
+        id_enchere = request.form.get("id", default="")
+        montant = request.form.get("motant_miser", default="")
+
+        if not montant:
+            montant = 0
+
+        if id_enchere == "" or enchere['est_supprimee'] == 1:
+            app.logger.info("L'enchère %s n'existe pas", id_enchere)
+            abort(404)
+        elif not user:
+            app.logger.info("L'utilisateur n'est pas connecté")
+            abort(401)
+        elif int(montant) == 0:
+            app.logger.info("L'utilisateur n'a pas misé")
+            msg = "Vous devez mettre un montant"
+        elif int(montant) > 2147483647:
+            app.logger.info("Le montant dépasse la limite")
+            msg = "Le montant ne peut pas dépasser 2147483647\n"
+        elif est_vendeur:
+            app.logger.info("L'utilisateur est le vendeur")
+            abort(400)
+        elif not active:
+            app.logger.info("L'enchère n'est pas active")
+            abort(400)
+        elif int(montant) <= montant_enchere:
+            app.logger.info("Le montant est inférieur à la mise actuelle")
+            msg = "Vous devez faire une mise plus grande que celle affichée\n"
+        else:
+            msg = ""
+
+        if msg == "":
+            if est_miseur:
+
+                with bd.creer_connexion() as conn:
+                    app.logger.info("Mise à jour de la mise de l'utilisateur %s sur l'enchère %s", user['courriel'], id_enchere)
+                    bd.update_mise_miseur(conn, id_enchere, session["utilisateur"]["id_utilisateur"], montant)
+            else:
+                with bd.creer_connexion() as conn:
+                    app.logger.info("Ajout de la mise de l'utilisateur %s sur l'enchère %s", user['courriel'], id_enchere)
+                    bd.faire_mise(conn, id_enchere, user['id_utilisateur'], montant)
+            app.logger.info("Redirection vers l'enchère %s", id_enchere)
+            return redirect(f'/encheres/{id_enchere}', 303)
+        else:
+            app.logger.info("Affichage de l'enchère %s avec un message d'erreur", id_enchere)
+            return render_template('details/details.jinja', enchere=enchere, active=active, nom=nom, mise=mise,
+                                   est_vendeur=est_vendeur, validation="is-invalid",
+                                   message=msg, user=user, valeur_btn=valeur_btn,
+                                   route_btn=route_btn, utilisateur=user, montant_min=montant_min)
     app.logger.info("Affichage de l'enchère %s", identifiant)
     return render_template('details/details.jinja', enchere=enchere, active=active, nom=nom,
                            mise=mise, est_vendeur=est_vendeur, user=user, route_btn=route_btn,
