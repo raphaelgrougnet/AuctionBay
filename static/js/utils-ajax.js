@@ -9,7 +9,7 @@
  * Envoie une requête AJAX et parse la réponse en JSON
  * @param {string} url Adresse utilisée pour votre requête
  * @param {string} methode Indique si la requête est en GET ou POST
- * @param {Object.<string, string>} parametres Tableau associatif des paramètres GET ou POST
+ * @param {Object} parametres Tableau associatif des paramètres GET ou POST
  * @param {AbortController} controleur Permet d'annuler la requête
  * @return {Object.<string, *>} Tableau associatif retourné par le serveur
  */

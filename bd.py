@@ -141,6 +141,15 @@ def get_mises_utilsateur_details(conn, id_utilisateur):
         return curseur.fetchall()
 
 
+def get_mises_encheres_details(conn, id_enchere):
+    with conn.get_curseur() as curseur:
+        curseur.execute(
+            "SELECT fk_miseur, montant, fk_enchere FROM mise "
+            "WHERE fk_enchere = %(id_enchere)s order by montant desc",
+            {"id_enchere": id_enchere})
+        return curseur.fetchall()
+
+
 def get_mise_utilsateur_details_enchere(conn, id_utilisateur, id_enchere):
     """Obtient les mises d'un utilisateur"""
     with conn.get_curseur() as curseur:

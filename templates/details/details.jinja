@@ -1,6 +1,7 @@
 {% extends "base.jinja" %}
 
 {% block contenu %}
+    <script src="/static/js/details.js" defer></script>
     <h1 class="fw-normal m-3 text-center">Détails</h1>
     <section class="p-3">
         <div class="container">
@@ -28,20 +29,20 @@
                                 <div class="card text-bg-light mb-3">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ nom }}</h5>
-                                        <p class="card-text">Plus grande mise : {{ mise.montant }}$</p>
+                                        <p id="mise" class="card-text">Plus grande mise : {{ mise.montant }}$</p>
                                     </div>
                                 </div>
                             {% else %}
                                 <div class="card text-bg-light mb-3">
                                     <div class="card-body">
-                                        <p class="card-text">Plus grande mise : {{ mise.montant }}$</p>
+                                        <p id="mise" class="card-text" >Plus grande mise : {{ mise.montant }}$</p>
                                     </div>
                                 </div>
                             {% endif %}
                         {% else %}
                             <div class="card text-bg-light mb-3">
                                 <div class="card-body">
-                                    <p class="card-text">Il n'y a aucune mise pour cette enchère.</p>
+                                    <p id="mise" class="card-text">Il n'y a aucune mise pour cette enchère.</p>
                                 </div>
                             </div>
                         {% endif %}
@@ -51,14 +52,15 @@
                         {% if user %}
                             {% if active %}
                                 {% if not est_vendeur %}
-                                    <form method="post" action="/encheres/{{ enchere.id_enchere }}" novalidate>
+                                    <form id="form-mise" method="post" action="" novalidate>
                                         <input type="hidden" name="id" value="{{enchere.id_enchere}}"/>
                                         <div>
                                             <label for="motant_miser" class="form-label">Miser :</label>
-                                            <input type="number" name="motant_miser" id="motant_miser" min="{{ montant_min }}" class="form-control {{ validation }}" placeholder="Entrer un montant...">
-                                            <div class="invalid-feedback">{{ message }}</div>
+                                            <input type="number" name="motant_miser" id="motant_miser" min="{{ montant_min }}" class="form-control" placeholder="Entrer un montant...">
+                                            <div id="feedback" class="invalid-feedback"></div>
+                                            <div class="valid-feedback">Votre mise a bien été prise en compte</div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary mt-2">Miser</button>
+                                        <button id="miser" type="submit" class="btn btn-primary mt-2">Miser</button>
                                     </form>
                                 {% else %}
                                     <p class="text-warning">Vous êtes le vendeur de cette enchère !</p>
